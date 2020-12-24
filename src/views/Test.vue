@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2020-12-24 17:49:57
+ * @LastEditTime: 2020-12-24 10:21:32
 -->
 <template>
   <div class="map-page" ref="scroll">
@@ -18,16 +18,22 @@
 const Unit_Time = 100; //单位时间
 const Delay_Time = 1000; //切换图片时间
 export default {
-  name: "Home",
-  watch: {},
+  name: "Test",
+  watch: {
+    boyStyle: {
+      handler(val) {
+        // console.log(val);
+      },
+      deep: true,
+    },
+  },
   data() {
     return {
       boyStyle: {
         top: "50%",
         left: "50%",
-        backgroundPosition: "0% 0%",
+        backgroundImage: `url(${require("@/assets/icon/back-s.png")})`,
         transitionDuration: "0ms",
-        transitionProperty: "",
       }, //小人属性
       placeList: [
         {
@@ -69,13 +75,6 @@ export default {
         left: boy.style.left,
       };
     },
-    /**
-     *位置     立正     左脚       右脚
-     *向上走 (0 00%) (49% 00%) (97% 00%)
-     *向下走 (0 34%) (49% 34%) (97% 34%)
-     *向左走 (0 67%) (49% 67%) (97% 67%)
-     *向右走 (0 100%) (49% 100%) (97% 100%)
-     */
 
     //小人移动 先左右 再上下x  如果xDiff大于0 则向右  yDiff大于0 则向下
     boyMove(placePosition, boyPosition) {
@@ -90,39 +89,18 @@ export default {
       const xTime = Math.abs(xDiff) * Unit_Time; //x轴移动时间
       const yTime = Math.abs(yDiff) * Unit_Time; //y轴移动时间
 
-      let UpInterval, DownInterval, RightInterval, LeftInterval;
-
       //=======================================================================
       //x轴移动
       if (xDiff >= 0) {
-        // //向右
-        this.boyStyle.backgroundPosition = "0% 100%";
-        let tag = 0;
-        RightInterval = setInterval(() => {
-          if (tag % 2 == 0) {
-            this.boyStyle.backgroundPosition = "49% 100%";
-          } else {
-            this.boyStyle.backgroundPosition = "97% 100%";
-          }
-          tag++;
-        }, 500);
+        //向右
+        this.boyStyle.backgroundImage = `url(${require("@/assets/icon/right.gif")})`;
       } else {
-        // //向左
-        this.boyStyle.backgroundPosition = "0% 67%";
-        let tag = 0;
-        LeftInterval = setInterval(() => {
-          if (tag % 2 == 0) {
-            this.boyStyle.backgroundPosition = "49% 67%";
-          } else {
-            this.boyStyle.backgroundPosition = "97% 67%";
-          }
-          tag++;
-        }, 500);
+        //向左
+        this.boyStyle.backgroundImage = `url(${require("@/assets/icon/left.gif")})`;
       }
 
       setTimeout(() => {
         this.boyStyle.left = placePosition.left;
-        this.boyStyle.transitionProperty = "left";
         this.boyStyle.transitionDuration = xTime + "ms";
       }, Delay_Time);
       //=======================================================================
@@ -131,37 +109,15 @@ export default {
       //y轴移动
       setTimeout(() => {
         if (yDiff >= 0) {
-          // //向下
-          this.boyStyle.backgroundPosition = "0% 34%";
-          let tag = 0;
-          DownInterval = setInterval(() => {
-            if (tag % 2 == 0) {
-              this.boyStyle.backgroundPosition = "49% 34%";
-            } else {
-              this.boyStyle.backgroundPosition = "97% 34%";
-            }
-            tag++;
-          }, 500);
+          //向下
+          this.boyStyle.backgroundImage = `url(${require("@/assets/icon/front.gif")})`;
         } else {
-          // //向上
-          this.boyStyle.backgroundPosition = "0% 0%";
-          let tag = 0;
-          UpInterval = setInterval(() => {
-            if (tag % 2 == 0) {
-              this.boyStyle.backgroundPosition = "49% 0%";
-            } else {
-              this.boyStyle.backgroundPosition = "97% 0%";
-            }
-            tag++;
-          }, 500);
+          //向上
+          this.boyStyle.backgroundImage = `url(${require("@/assets/icon/back.gif")})`;
         }
 
         setTimeout(() => {
-          clearInterval(LeftInterval);
-          clearInterval(RightInterval);
-
           this.boyStyle.top = placePosition.top;
-          this.boyStyle.transitionProperty = "top";
           this.boyStyle.transitionDuration = yTime + "ms";
         }, Delay_Time);
       }, xTime + Delay_Time);
@@ -169,8 +125,7 @@ export default {
 
       //动画结束 关闭上下走的定时器
       setTimeout(() => {
-        clearInterval(UpInterval);
-        clearInterval(DownInterval);
+        this.boyStyle.backgroundImage = `url(${require("@/assets/icon/front-s.png")})`;
       }, xTime + yTime + Delay_Time * 2);
     },
 
@@ -211,10 +166,9 @@ export default {
 }
 // 小人
 .icon-boy {
-  width: 50px;
-  height: 85px;
-  background-image: url("~@/assets/icon/man.png");
-  background-repeat: no-repeat;
+  width: 30px;
+  height: 53px;
+  background-size: cover;
   position: absolute;
   top: 50%;
   left: 50%;
