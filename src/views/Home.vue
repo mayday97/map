@@ -1,22 +1,30 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2020-12-24 17:49:57
+ * @LastEditTime: 2020-12-25 15:59:50
 -->
 <template>
   <div class="map-page" ref="scroll">
     <img class="icon-compass" src="../assets/icon/compass.png" alt="" />
     <!-- 地图区域 -->
     <div class="map-wrap">
+      <!-- 大风车 -->
+      <div class="icon-dfc"></div>
+      <!-- 湖泊 -->
+      <div class="icon-lake"></div>
+      <!-- 小人 -->
       <div class="icon-boy" ref="boy" :style="boyStyle"></div>
+      <!-- 地点 -->
       <div class="place" v-for="item in placeList" :key="item.name" :style="{ top: item.top, left: item.left }" @click="bindPlace(item)"></div>
     </div>
   </div>
 </template>
 
 <script>
+import mydata from "../../public/data.js";
 const Unit_Time = 100; //单位时间
-const Delay_Time = 1000; //切换图片时间
+const Delay_Time = 500; //切换方向延迟（X轴，Y轴切换）
+const Speed_Time = 200; // 走路速度
 export default {
   name: "Home",
   watch: {},
@@ -48,6 +56,9 @@ export default {
       ], //地点集合
     };
   },
+  created() {
+    console.log(mydata);
+  },
   mounted() {
     this.init();
   },
@@ -71,10 +82,10 @@ export default {
     },
     /**
      *位置     立正     左脚       右脚
-     *向上走 (0 00%) (49% 00%) (97% 00%)
-     *向下走 (0 34%) (49% 34%) (97% 34%)
-     *向左走 (0 67%) (49% 67%) (97% 67%)
-     *向右走 (0 100%) (49% 100%) (97% 100%)
+     *向上走 (0 00%) (33% 00%) (66% 00%)
+     *向下走 (0 32%) (33% 32%) (66% 32%)
+     *向左走 (0 66%) (32% 66%) (66% 66%)  (98% 66%)
+     *向右走 (0 100%) (32% 100%) (66% 100%) (98% 100%)
      */
 
     //小人移动 先左右 再上下x  如果xDiff大于0 则向右  yDiff大于0 则向下
@@ -99,25 +110,33 @@ export default {
         this.boyStyle.backgroundPosition = "0% 100%";
         let tag = 0;
         RightInterval = setInterval(() => {
-          if (tag % 2 == 0) {
-            this.boyStyle.backgroundPosition = "49% 100%";
-          } else {
-            this.boyStyle.backgroundPosition = "97% 100%";
+          if (tag === 0) {
+            this.boyStyle.backgroundPosition = "32% 100%";
+            tag++;
+          } else if (tag === 1) {
+            this.boyStyle.backgroundPosition = "66% 100%";
+            tag++;
+          } else if (tag === 2) {
+            this.boyStyle.backgroundPosition = "98% 100%";
+            tag = 0;
           }
-          tag++;
-        }, 500);
+        }, Speed_Time);
       } else {
         // //向左
-        this.boyStyle.backgroundPosition = "0% 67%";
+        this.boyStyle.backgroundPosition = "0% 66%";
         let tag = 0;
-        LeftInterval = setInterval(() => {
-          if (tag % 2 == 0) {
-            this.boyStyle.backgroundPosition = "49% 67%";
-          } else {
-            this.boyStyle.backgroundPosition = "97% 67%";
+        RightInterval = setInterval(() => {
+          if (tag === 0) {
+            this.boyStyle.backgroundPosition = "32% 66%";
+            tag++;
+          } else if (tag === 1) {
+            this.boyStyle.backgroundPosition = "66% 66%";
+            tag++;
+          } else if (tag === 2) {
+            this.boyStyle.backgroundPosition = "98% 66%";
+            tag = 0;
           }
-          tag++;
-        }, 500);
+        }, Speed_Time);
       }
 
       setTimeout(() => {
@@ -130,36 +149,35 @@ export default {
       //=======================================================================
       //y轴移动
       setTimeout(() => {
+        clearInterval(LeftInterval);
+        clearInterval(RightInterval);
         if (yDiff >= 0) {
           // //向下
-          this.boyStyle.backgroundPosition = "0% 34%";
+          this.boyStyle.backgroundPosition = "0% 32%";
           let tag = 0;
           DownInterval = setInterval(() => {
             if (tag % 2 == 0) {
-              this.boyStyle.backgroundPosition = "49% 34%";
+              this.boyStyle.backgroundPosition = "33% 32%";
             } else {
-              this.boyStyle.backgroundPosition = "97% 34%";
+              this.boyStyle.backgroundPosition = "66% 32%";
             }
             tag++;
-          }, 500);
+          }, Speed_Time);
         } else {
           // //向上
           this.boyStyle.backgroundPosition = "0% 0%";
           let tag = 0;
           UpInterval = setInterval(() => {
             if (tag % 2 == 0) {
-              this.boyStyle.backgroundPosition = "49% 0%";
+              this.boyStyle.backgroundPosition = "33% 0%";
             } else {
-              this.boyStyle.backgroundPosition = "97% 0%";
+              this.boyStyle.backgroundPosition = "66% 0%";
             }
             tag++;
-          }, 500);
+          }, Speed_Time);
         }
 
         setTimeout(() => {
-          clearInterval(LeftInterval);
-          clearInterval(RightInterval);
-
           this.boyStyle.top = placePosition.top;
           this.boyStyle.transitionProperty = "top";
           this.boyStyle.transitionDuration = yTime + "ms";
@@ -212,8 +230,8 @@ export default {
 // 小人
 .icon-boy {
   width: 50px;
-  height: 85px;
-  background-image: url("~@/assets/icon/man.png");
+  height: 86px;
+  background-image: url("~@/assets/icon/man-2.png");
   background-repeat: no-repeat;
   position: absolute;
   top: 50%;
@@ -221,6 +239,29 @@ export default {
   transform: translate(-50%, -50%);
   transition-timing-function: linear;
   z-index: 100;
+}
+
+//大风车
+.icon-dfc {
+  width: 100px;
+  height: 100px;
+  background-image: url("~@/assets/image/dfc.gif");
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 100px;
+  left: 100px;
+}
+//湖泊
+.icon-lake {
+  width: 100px;
+  height: 100px;
+  background-image: url("~@/assets/image/lake.gif");
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 200px;
+  left: 80px;
 }
 
 .place {
