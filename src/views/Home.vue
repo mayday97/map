@@ -1,12 +1,13 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2020-12-28 18:34:42
+ * @LastEditTime: 2020-12-29 17:18:40
 -->
 <template>
-  <div class="map-page" ref="scroll">
-    <video src="../assets/music/bgm01.mp3" style="display:none" ref="bgmusic"></video>
-    <video src="../assets/music/airplane.mp3" style="display:none" ref="airmusic"></video>
+  <div class="map-page" ref="scroll" id="scroll">
+    <div class="prevent-wrap" v-show="showPrevent"></div>
+    <audio src="../assets/music/bgm01.mp3" loop style="display:none" ref="bgmusic"></audio>
+    <audio src="../assets/music/airplane.mp3" style="display:none" ref="airmusic"></audio>
 
     <!-- 指南针 -->
     <img class="icon-compass" src="../assets/icon/compass.png" alt="" />
@@ -22,7 +23,7 @@
       <!-- 小人 -->
       <div class="icon-boy" ref="boy" :style="boyStyle"></div>
       <!-- 地点 -->
-      <div class="place" v-for="item in placeList" :key="item.name" :style="{ top: item.top, left: item.left }" @click="bindPlace(item)"></div>
+      <div class="place" v-for="item in placeList" :key="item.name" :style="{ top: item.position.top, left: item.position.left }" @click="bindPlace(item)"></div>
     </div>
 
     <!-- 开始弹框 -->
@@ -36,7 +37,7 @@
     <!-- 详情弹框 -->
     <van-popup v-model="showDetail">
       <div class="place-detail-wrap popup-wrap">
-        <h2 class="title">区域名</h2>
+        <h2 class="title">{{ showPlace.name }}</h2>
         <ul class="place-list">
           <li class="place-detail">详情一</li>
           <li class="place-detail">详情二</li>
@@ -61,8 +62,9 @@ export default {
   },
   data() {
     return {
-      showStart: false,
-      showDetail: false,
+      showPrevent: false,
+      showStart: false, //开始弹框
+      showDetail: false, //详情弹框
 
       boyStyle: {
         top: "50%",
@@ -71,27 +73,27 @@ export default {
         transitionDuration: "0ms",
         transitionProperty: "",
       }, //小人属性
-      placeList: [
-        {
-          name: "测试地点",
-          top: "66%",
-          left: "20%",
-        },
-        {
-          name: "测试地点2",
-          top: "66%",
-          left: "80%",
-        },
-      ], //地点集合
+      placeList: [], //地点集合
+      showPlace: {}, //要展示的地点信息
     };
   },
   created() {
-    console.log(mydata);
+    this.resourceLoad();
+    this.placeList = mydata.list;
   },
   mounted() {
     this.init();
   },
   methods: {
+    //资源加载
+    resourceLoad() {
+      // let loading=this.$toast.loading({
+      //   message:"资源加载中...",
+      //   duration:0,
+      //   forbidClick:true
+      // })
+    },
+
     //点击开始
     handleStart() {
       const bgMusic = this.$refs.bgmusic;
@@ -110,19 +112,36 @@ export default {
       scrollElement.scrollLeft = (width - screenWidth) / 2;
     },
 
-    //页面横向跟随小人  xtime  小人横向走动时间 pleft  小人要移动到的x轴位置
-    movePage(xtime, pleft) {
+    //页面横向跟随小人  xtime  小人横向走动时间 pleft 小人要移动到的x轴位置  boyLeft 小人运动前的位置 scroll-behavior: smooth;
+    movePage(xtime, pleft, boyLeft) {
       const scrollElement = this.$refs.scroll;
+      const mapWidth = scrollElement.scrollWidth; //地图容器的宽度
+      const screenWidth = document.body.clientWidth; //屏幕宽度
 
-      const mapWidth = document.body.clientHeight * 1.95; //地图容器的宽度
+      const scaleNum = pleft.replace("%", "") / 100; //将位置转换为小数
+      const boyNum = boyLeft.replace("%", "") / 100;
 
-      console.log(mapWidth, pleft, xtime);
-      console.log(scrollElement.animate({ scrollLeft: 10000 }, xtime));
-      scrollElement.animate({ scrollLeft: 10000 }, xtime);
-      // const mInterval = setInterval(() => {}, 500);
-      // setTimeout(() => {
-      //   clearInterval(mInterval);
-      // }, xtime);
+      const startPosition = mapWidth * boyNum - screenWidth / 2;
+      const endPosition = mapWidth * scaleNum - screenWidth / 2; //要滚动到的位置
+
+      scrollElement.style.scrollBehavior = "";
+      scrollElement.scrollLeft = startPosition; //移动到小人位置
+      scrollElement.style.scrollBehavior = "smooth"; //平滑移动
+
+      const speed = (endPosition - startPosition) / xtime; //速度 每毫秒
+      console.log(speed);
+      // console.log(startPosition, endPosition, scrollElement.scrollLeft);
+      // scrollElement.animate({ scrollLeft: endPosition }, xtime);
+
+      let tag = startPosition;
+      const mInterval = window.setInterval(() => {
+        scrollElement.scrollLeft = tag;
+        tag = tag + speed * 50;
+      }, 50);
+      setTimeout(() => {
+        clearInterval(mInterval);
+        scrollElement.style.scrollBehavior = "";
+      }, xtime);
     },
 
     //获取小人所在位置
@@ -142,9 +161,9 @@ export default {
      *向右走 (0 100%) (32% 100%) (66% 100%) (98% 100%)
      */
     //小人移动 先左右 再上下  如果xDiff大于0 则向右  yDiff大于0 则向下
-    boyMove(placePosition, boyPosition) {
-      const placeLeftNum = placePosition.left.split("%")[0]; //地点x轴坐标值
-      const placeTopNum = placePosition.top.split("%")[0]; //地点y轴坐标值
+    boyMove(place, boyPosition) {
+      const placeLeftNum = place.position.left.split("%")[0]; //地点x轴坐标值
+      const placeTopNum = place.position.top.split("%")[0]; //地点y轴坐标值
       const boyLeftNum = boyPosition.left.split("%")[0]; //小人x轴坐标值
       const boyTopNum = boyPosition.top.split("%")[0]; //小人y轴坐标值
 
@@ -157,6 +176,7 @@ export default {
       let UpInterval, DownInterval, RightInterval, LeftInterval;
 
       //=======================================================================
+      this.showPrevent = true; //打开防止小人运动时用户触摸的遮罩
       //x轴移动
       if (xDiff >= 0) {
         // //向右
@@ -193,10 +213,10 @@ export default {
       }
 
       setTimeout(() => {
-        this.boyStyle.left = placePosition.left;
+        this.boyStyle.left = place.position.left;
         this.boyStyle.transitionProperty = "left";
         this.boyStyle.transitionDuration = xTime + "ms";
-        this.movePage(xTime, placePosition.left);
+        this.movePage(xTime, place.position.left, boyPosition.left);
       }, Delay_Time);
       //=======================================================================
 
@@ -232,7 +252,7 @@ export default {
         }
 
         setTimeout(() => {
-          this.boyStyle.top = placePosition.top;
+          this.boyStyle.top = place.position.top;
           this.boyStyle.transitionProperty = "top";
           this.boyStyle.transitionDuration = yTime + "ms";
         }, Delay_Time);
@@ -243,7 +263,8 @@ export default {
       setTimeout(() => {
         clearInterval(UpInterval);
         clearInterval(DownInterval);
-        this.showPlaceDetail();
+        this.showPlaceDetail(place);
+        this.showPrevent = false; //关闭防止小人运动时用户触摸的遮罩
       }, xTime + yTime + Delay_Time * 2);
     },
 
@@ -254,7 +275,8 @@ export default {
     },
 
     //显示地点详情
-    showPlaceDetail() {
+    showPlaceDetail(e) {
+      this.showPlace = e;
       this.showDetail = true;
     },
   },
@@ -262,6 +284,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.prevent-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 50;
+}
 //弹框
 /deep/ .van-popup {
   background-color: rgba(0, 0, 0, 0);
@@ -331,7 +362,6 @@ export default {
   background-color: #fff2c6;
   height: 100vh;
   overflow-x: scroll;
-  // scroll-behavior: smooth;
 }
 // 地图容器
 .map-wrap {
@@ -348,7 +378,7 @@ export default {
 .icon-boy {
   width: 50px;
   height: 86px;
-  background-image: url("~@/assets/icon/man-2.png");
+  background-image: url("~@/assets/icon/man-1.png");
   background-repeat: no-repeat;
   position: absolute;
   top: 50%;
@@ -383,9 +413,11 @@ export default {
 
 .place {
   position: absolute;
-  width: 30px;
-  height: 30px;
-  background-color: #fff;
+  width: 50px;
+  height: 80px;
+  background-image: url("~@/assets/icon/location.png");
+  background-size: contain;
+  background-repeat: no-repeat;
   transform: translate(-50%, -50%);
 }
 </style>
