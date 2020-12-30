@@ -1,14 +1,16 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2020-12-29 17:18:40
+ * @LastEditTime: 2020-12-30 16:10:27
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
     <div class="prevent-wrap" v-show="showPrevent"></div>
-    <audio src="../assets/music/bgm01.mp3" loop style="display:none" ref="bgmusic"></audio>
-    <audio src="../assets/music/airplane.mp3" style="display:none" ref="airmusic"></audio>
+    <audio preload src="../assets/music/bgm01.mp3" loop style="display:none" ref="bgmusic"></audio>
+    <audio preload src="../assets/music/airplane.mp3" style="display:none" ref="airmusic"></audio>
 
+    <!-- 飞机 -->
+    <img class="fly-plane" :class="fly && 'fly'" src="../assets/icon/plane.png" alt="" v-show="fly" @animationEnd="flyEnd" @webkitAnimationEnd="flyEnd" />
     <!-- 指南针 -->
     <img class="icon-compass" src="../assets/icon/compass.png" alt="" />
 
@@ -27,7 +29,7 @@
     </div>
 
     <!-- 开始弹框 -->
-    <van-popup v-model="showStart">
+    <van-popup v-model="showStart" :close-on-click-overlay="false">
       <div class="popup-wrap start-wrap">
         <p class="text">让我们开始探索萧山的秘密吧。</p>
         <button class="start-btn" @click="handleStart">开始</button>
@@ -49,10 +51,11 @@
 </template>
 
 <script>
+import Jquery from "jquery";
 import mydata from "../../public/data.js";
 const Unit_Time = 100; //单位时间
 const Delay_Time = 500; //切换方向延迟（X轴，Y轴切换）
-const Speed_Time = 200; // 走路速度
+const Speed_Time = 150; // 走路速度
 
 import { Popup } from "vant";
 export default {
@@ -62,8 +65,9 @@ export default {
   },
   data() {
     return {
-      showPrevent: false,
-      showStart: false, //开始弹框
+      fly: false,
+      showPrevent: false, //小人开始移动时的放触摸遮罩
+      showStart: true, //开始弹框
       showDetail: false, //详情弹框
 
       boyStyle: {
@@ -92,6 +96,25 @@ export default {
       //   duration:0,
       //   forbidClick:true
       // })
+      let imgs = [require("@/assets/image/map.png")];
+      for (let img of imgs) {
+        let image = new Image();
+        image.src = img;
+        image.onload = (e) => {
+          console.log("背景图预加载成功");
+        };
+        image.onerror = (e) => {
+          console.log("背景图预加载失败", e);
+        };
+      }
+      let audios = [require("@/assets/music/bgm01.mp3"), require("@/assets/music/airplane.mp3")];
+      for (let item of audios) {
+        let audio = new Audio();
+        audio.src = item;
+        audio.addEventListener("canplaythrough", (e) => {
+          console.log(e);
+        });
+      }
     },
 
     //点击开始
@@ -101,6 +124,18 @@ export default {
       bgMusic.play();
       airMusic.play();
       this.showStart = false;
+      this.fly = true;
+      let airInterval = setInterval(() => {
+        airMusic.play();
+        this.fly = true;
+      }, 15000);
+      this.$once("hook:beforeDestroy", function() {
+        clearInterval(airInterval);
+      });
+    },
+
+    flyEnd() {
+      this.fly = false;
     },
 
     //初始化
@@ -112,7 +147,7 @@ export default {
       scrollElement.scrollLeft = (width - screenWidth) / 2;
     },
 
-    //页面横向跟随小人  xtime  小人横向走动时间 pleft 小人要移动到的x轴位置  boyLeft 小人运动前的位置 scroll-behavior: smooth;
+    //页面横向跟随小人  xtime  小人横向走动时间 pleft 小人要移动到的x轴位置  boyLeft 小人运动前的位置
     movePage(xtime, pleft, boyLeft) {
       const scrollElement = this.$refs.scroll;
       const mapWidth = scrollElement.scrollWidth; //地图容器的宽度
@@ -124,24 +159,11 @@ export default {
       const startPosition = mapWidth * boyNum - screenWidth / 2;
       const endPosition = mapWidth * scaleNum - screenWidth / 2; //要滚动到的位置
 
-      scrollElement.style.scrollBehavior = "";
       scrollElement.scrollLeft = startPosition; //移动到小人位置
-      scrollElement.style.scrollBehavior = "smooth"; //平滑移动
 
-      const speed = (endPosition - startPosition) / xtime; //速度 每毫秒
-      console.log(speed);
-      // console.log(startPosition, endPosition, scrollElement.scrollLeft);
-      // scrollElement.animate({ scrollLeft: endPosition }, xtime);
-
-      let tag = startPosition;
-      const mInterval = window.setInterval(() => {
-        scrollElement.scrollLeft = tag;
-        tag = tag + speed * 50;
-      }, 50);
-      setTimeout(() => {
-        clearInterval(mInterval);
-        scrollElement.style.scrollBehavior = "";
-      }, xtime);
+      Jquery("#scroll").animate({ scrollLeft: endPosition }, xtime, "linear", function() {
+        console.log("aaa");
+      });
     },
 
     //获取小人所在位置
@@ -351,6 +373,25 @@ export default {
   left: 3%;
   text-align: center;
 }
+// 飞行飞机
+.fly-plane {
+  position: absolute;
+  top: 100px;
+  left: 0;
+  width: 50px;
+  z-index: 50;
+}
+.fly {
+  animation: flyAnimation 2s ease-in;
+}
+@keyframes flyAnimation {
+  from {
+    left: 0;
+  }
+  to {
+    left: 100%;
+  }
+}
 // 指南针
 .icon-compass {
   position: fixed;
@@ -362,6 +403,7 @@ export default {
   background-color: #fff2c6;
   height: 100vh;
   overflow-x: scroll;
+  // scroll-behavior: smooth;
 }
 // 地图容器
 .map-wrap {
@@ -413,8 +455,8 @@ export default {
 
 .place {
   position: absolute;
-  width: 50px;
-  height: 80px;
+  width: 40px;
+  height: 62.5px;
   background-image: url("~@/assets/icon/location.png");
   background-size: contain;
   background-repeat: no-repeat;
