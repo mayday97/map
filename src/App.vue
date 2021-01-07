@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2020-12-28 15:25:23
+ * @LastEditTime: 2021-01-07 11:27:27
 -->
 <template>
   <div id="app">
@@ -16,5 +16,8 @@
 }
 div {
   box-sizing: border-box;
+}
+p {
+  margin: 5px 0;
 }
 </style>

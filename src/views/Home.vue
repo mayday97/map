@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2020-12-30 16:10:27
+ * @LastEditTime: 2021-01-07 11:59:01
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -15,7 +15,7 @@
     <img class="icon-compass" src="../assets/icon/compass.png" alt="" />
 
     <!-- 头部标题 -->
-    <h1 class="page-title">萧山地图</h1>
+    <h1 class="page-title">萧山年货地图</h1>
     <!-- 地图区域 -->
     <div class="map-wrap">
       <!-- 大风车 -->
@@ -39,11 +39,16 @@
     <!-- 详情弹框 -->
     <van-popup v-model="showDetail">
       <div class="place-detail-wrap popup-wrap">
-        <h2 class="title">{{ showPlace.name }}</h2>
-        <ul class="place-list">
-          <li class="place-detail">详情一</li>
-          <li class="place-detail">详情二</li>
-        </ul>
+        <van-swipe class="my-swipe" :show-indicators="false">
+          <van-swipe-item v-for="(item, index) in showPlace.shops" :key="index">
+            <div class="shop-item">
+              <h2 class="title">{{ item.title }}</h2>
+              <img :src="item.banner" alt="" />
+              <p class="bot-text">所属公司：{{ item.company }}</p>
+              <p class="bot-text">所属街道：{{ showPlace.name }}</p>
+            </div>
+          </van-swipe-item>
+        </van-swipe>
       </div>
       <img src="@/assets/icon/close.png" class="icon-close" alt="" @click="showDetail = false" />
     </van-popup>
@@ -57,11 +62,13 @@ const Unit_Time = 100; //单位时间
 const Delay_Time = 500; //切换方向延迟（X轴，Y轴切换）
 const Speed_Time = 150; // 走路速度
 
-import { Popup } from "vant";
+import { Popup, Swipe, SwipeItem } from "vant";
 export default {
   name: "Home",
   components: {
     [Popup.name]: Popup,
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
   },
   data() {
     return {
@@ -78,7 +85,7 @@ export default {
         transitionProperty: "",
       }, //小人属性
       placeList: [], //地点集合
-      showPlace: {}, //要展示的地点信息
+      showPlace: [], //要展示的地点信息
     };
   },
   created() {
@@ -112,7 +119,7 @@ export default {
         let audio = new Audio();
         audio.src = item;
         audio.addEventListener("canplaythrough", (e) => {
-          console.log(e);
+          // console.log(e);
         });
       }
     },
@@ -349,13 +356,21 @@ export default {
 }
 .place-detail-wrap {
   overflow-y: scroll;
-  .title {
-    font-size: 16px;
-    text-align: center;
-    margin-top: 0;
-  }
-  .place-list {
+  .shop-item {
     font-size: 14px;
+    .title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 0;
+    }
+    img {
+      width: 100%;
+    }
+    .bot-text {
+      text-align: right;
+      font-size: 12px;
+    }
   }
 }
 .icon-close {
