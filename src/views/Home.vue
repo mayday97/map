@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-11 14:51:52
+ * @LastEditTime: 2021-01-11 17:30:39
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll" @scroll="scroll">
@@ -60,7 +60,7 @@ import Jquery from "jquery";
 import mydata from "../../public/data.js";
 const Unit_Time = 100; //单位时间
 const Delay_Time = 500; //切换方向延迟（X轴，Y轴切换）
-const Speed_Time = 150; // 走路速度
+const Speed_Time = 200; // 走路速度
 
 import { Popup, Swipe, SwipeItem } from "vant";
 export default {
@@ -217,6 +217,12 @@ export default {
      *向下走 (0 32%) (33% 32%) (66% 32%)
      *向左走 (0 66%) (32% 66%) (66% 66%)  (98% 66%)
      *向右走 (0 100%) (32% 100%) (66% 100%) (98% 100%)
+
+     *位置     立正     左脚       右脚
+     *向下走 (0 00%) (50% 00%) (100% 00%)
+     *向上走 (0 33%) (50% 33%) (100% 33%)
+     *向左走 (0 66%) (50% 66%) (100% 66%)
+     *向右走 (0 100%) (50% 100%) (100% 100%)
      */
     //小人移动 先左右 再上下  如果xDiff大于0 则向右  yDiff大于0 则向下
     boyMove(place, boyPosition) {
@@ -241,32 +247,44 @@ export default {
         this.boyStyle.backgroundPosition = "0% 100%";
         let tag = 0;
         RightInterval = setInterval(() => {
-          if (tag === 0) {
-            this.boyStyle.backgroundPosition = "32% 100%";
-            tag++;
-          } else if (tag === 1) {
-            this.boyStyle.backgroundPosition = "66% 100%";
-            tag++;
-          } else if (tag === 2) {
-            this.boyStyle.backgroundPosition = "98% 100%";
-            tag = 0;
+          // if (tag === 0) {
+          //   this.boyStyle.backgroundPosition = "32% 100%";
+          //   tag++;
+          // } else if (tag === 1) {
+          //   this.boyStyle.backgroundPosition = "66% 100%";
+          //   tag++;
+          // } else if (tag === 2) {
+          //   this.boyStyle.backgroundPosition = "98% 100%";
+          //   tag = 0;
+          // }
+          if (tag % 2 == 0) {
+            this.boyStyle.backgroundPosition = "50% 100%";
+          } else {
+            this.boyStyle.backgroundPosition = "100% 100%";
           }
+          tag++;
         }, Speed_Time);
       } else {
         // //向左
         this.boyStyle.backgroundPosition = "0% 66%";
         let tag = 0;
         RightInterval = setInterval(() => {
-          if (tag === 0) {
-            this.boyStyle.backgroundPosition = "32% 66%";
-            tag++;
-          } else if (tag === 1) {
-            this.boyStyle.backgroundPosition = "66% 66%";
-            tag++;
-          } else if (tag === 2) {
-            this.boyStyle.backgroundPosition = "98% 66%";
-            tag = 0;
+          // if (tag === 0) {
+          //   this.boyStyle.backgroundPosition = "32% 66%";
+          //   tag++;
+          // } else if (tag === 1) {
+          //   this.boyStyle.backgroundPosition = "66% 66%";
+          //   tag++;
+          // } else if (tag === 2) {
+          //   this.boyStyle.backgroundPosition = "98% 66%";
+          //   tag = 0;
+          // }
+          if (tag % 2 == 0) {
+            this.boyStyle.backgroundPosition = "50% 66%";
+          } else {
+            this.boyStyle.backgroundPosition = "100% 66%";
           }
+          tag++;
         }, Speed_Time);
       }
 
@@ -285,25 +303,25 @@ export default {
         clearInterval(RightInterval);
         if (yDiff >= 0) {
           // //向下
-          this.boyStyle.backgroundPosition = "0% 32%";
+          this.boyStyle.backgroundPosition = "0% 0%";
           let tag = 0;
           DownInterval = setInterval(() => {
             if (tag % 2 == 0) {
-              this.boyStyle.backgroundPosition = "33% 32%";
+              this.boyStyle.backgroundPosition = "50% 0%";
             } else {
-              this.boyStyle.backgroundPosition = "66% 32%";
+              this.boyStyle.backgroundPosition = "100% 0%";
             }
             tag++;
           }, Speed_Time);
         } else {
           // //向上
-          this.boyStyle.backgroundPosition = "0% 0%";
+          this.boyStyle.backgroundPosition = "0% 33%";
           let tag = 0;
           UpInterval = setInterval(() => {
             if (tag % 2 == 0) {
-              this.boyStyle.backgroundPosition = "33% 0%";
+              this.boyStyle.backgroundPosition = "50% 33%";
             } else {
-              this.boyStyle.backgroundPosition = "66% 0%";
+              this.boyStyle.backgroundPosition = "100% 33%";
             }
             tag++;
           }, Speed_Time);
@@ -469,7 +487,7 @@ export default {
 .icon-boy {
   width: 50px;
   height: 86px;
-  background-image: url("~@/assets/icon/man-1.png");
+  background-image: url("~@/assets/icon/man-3.png");
   background-repeat: no-repeat;
   position: absolute;
   top: 50%;
