@@ -1,10 +1,10 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-07 11:59:01
+ * @LastEditTime: 2021-01-11 14:51:52
 -->
 <template>
-  <div class="map-page" ref="scroll" id="scroll">
+  <div class="map-page" ref="scroll" id="scroll" @scroll="scroll">
     <div class="prevent-wrap" v-show="showPrevent"></div>
     <audio preload src="../assets/music/bgm01.mp3" loop style="display:none" ref="bgmusic"></audio>
     <audio preload src="../assets/music/airplane.mp3" style="display:none" ref="airmusic"></audio>
@@ -15,7 +15,7 @@
     <img class="icon-compass" src="../assets/icon/compass.png" alt="" />
 
     <!-- 头部标题 -->
-    <h1 class="page-title">萧山年货地图</h1>
+    <div class="page-title">萧山年货地图</div>
     <!-- 地图区域 -->
     <div class="map-wrap">
       <!-- 大风车 -->
@@ -150,12 +150,19 @@ export default {
       //初始化地图 居中
       const scrollElement = this.$refs.scroll;
       const width = scrollElement.scrollWidth;
+      const height = scrollElement.scrollHeight;
       const screenWidth = document.body.clientWidth;
+      const screenHeight = document.body.clientHeight;
       scrollElement.scrollLeft = (width - screenWidth) / 2;
+      scrollElement.scrollTop = (height - screenHeight) / 2;
+    },
+
+    scroll(e) {
+      // console.log(e.srcElement.scrollTop, e.target.scrollTop);
     },
 
     //页面横向跟随小人  xtime  小人横向走动时间 pleft 小人要移动到的x轴位置  boyLeft 小人运动前的位置
-    movePage(xtime, pleft, boyLeft) {
+    movePage(xtime, pleft, boyLeft, boyTop) {
       const scrollElement = this.$refs.scroll;
       const mapWidth = scrollElement.scrollWidth; //地图容器的宽度
       const screenWidth = document.body.clientWidth; //屏幕宽度
@@ -166,10 +173,32 @@ export default {
       const startPosition = mapWidth * boyNum - screenWidth / 2;
       const endPosition = mapWidth * scaleNum - screenWidth / 2; //要滚动到的位置
 
-      scrollElement.scrollLeft = startPosition; //移动到小人位置
+      scrollElement.scrollLeft = startPosition; //移动到小人位置横向
+
+      const mapHeight = scrollElement.scrollHeight; //地图容器的宽度
+      const screenHeight = document.body.clientHeight; //屏幕宽度
+      const boyNumTop = boyTop.replace("%", "") / 100;
+      const startPositionTop = mapHeight * boyNumTop - screenHeight / 2;
+      scrollElement.scrollTop = startPositionTop; //移动到小人位置 竖直方向
 
       Jquery("#scroll").animate({ scrollLeft: endPosition }, xtime, "linear", function() {
         console.log("aaa");
+      });
+    },
+
+    //页面上下跟随小人
+    movePageVertical(ytime, pTop, boyTop) {
+      const scrollElement = this.$refs.scroll;
+
+      const mapHeight = scrollElement.scrollHeight; //地图容器的宽度
+      const screenHeight = document.body.clientHeight; //屏幕宽度
+
+      const scaleNum = pTop.replace("%", "") / 100; //将位置转换为小数
+
+      const endPosition = mapHeight * scaleNum - screenHeight / 2; //要滚动到的位置
+
+      Jquery("#scroll").animate({ scrollTop: endPosition }, ytime, "linear", function() {
+        console.log("bbb");
       });
     },
 
@@ -245,7 +274,7 @@ export default {
         this.boyStyle.left = place.position.left;
         this.boyStyle.transitionProperty = "left";
         this.boyStyle.transitionDuration = xTime + "ms";
-        this.movePage(xTime, place.position.left, boyPosition.left);
+        this.movePage(xTime, place.position.left, boyPosition.left, boyPosition.top);
       }, Delay_Time);
       //=======================================================================
 
@@ -284,6 +313,7 @@ export default {
           this.boyStyle.top = place.position.top;
           this.boyStyle.transitionProperty = "top";
           this.boyStyle.transitionDuration = yTime + "ms";
+          this.movePageVertical(yTime, place.position.top, boyPosition.top);
         }, Delay_Time);
       }, xTime + Delay_Time);
       //=======================================================================
@@ -381,12 +411,15 @@ export default {
 
 //页面标题
 .page-title {
-  width: 94%;
+  width: 100%;
   font-size: 16px;
+  font-weight: bold;
   position: absolute;
-  top: 20px;
-  left: 3%;
+  padding-top: 20px;
+  height: 10%;
   text-align: center;
+  // z-index: 10;
+  // background-color: #fff2c6;
 }
 // 飞行飞机
 .fly-plane {
@@ -413,6 +446,7 @@ export default {
   top: 20px;
   left: 20px;
   width: 30px;
+  z-index: 11;
 }
 .map-page {
   background-color: #fff2c6;
@@ -422,8 +456,8 @@ export default {
 }
 // 地图容器
 .map-wrap {
-  width: 195vh;
-  height: 90vh;
+  width: 390vh;
+  height: 180vh;
   background-image: url("~@/assets/image/map.png");
   background-size: contain;
   background-position: center center;
