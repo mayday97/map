@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-11 17:30:39
+ * @LastEditTime: 2021-01-12 14:33:41
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll" @scroll="scroll">
@@ -44,6 +44,12 @@
             <div class="shop-item">
               <h2 class="title">{{ item.title }}</h2>
               <img :src="item.banner" alt="" />
+              <a
+                href="https://detail.tmall.com/item.htm?id=530141938640&ut_sk=1.W/PnAugBdt8DAER6aNk/Yhjt_21380790_1609984124723.Copy.1&sourceType=item&price=58&origin_price=88&suid=87D4E56C-172E-4B70-B7E6-928450C34AE3&shareUniqueId=6910038693&un=11662d2ef49431bbbbeeeafdb2768e28&share_crt_v=1&spm=a2159r.13376460.0.0&sp_tk=WjkyOGNIVnBXc0c=&cpp=1&shareurl=true&short_name=h.4hkCFAU&bxsign=scd6gsURy5SB_Oc2Cl_kGmvL9u4SP1jSwnv1oyCsWtuhgnMnKk9hcl8CvwcWBTL3uwOMluT7x54Ji5efzghVwzXYNhAhnzi5sYnTigcKvSN5C4&sm=91d411&app=chrome"
+                >前往详情tmall</a
+              >
+              <br />
+              <a href="https://qr.1688.com/share.html?secret=Owwa2d99">前往详情1688</a>
               <p class="bot-text">所属公司：{{ item.company }}</p>
               <p class="bot-text">所属街道：{{ showPlace.name }}</p>
             </div>
