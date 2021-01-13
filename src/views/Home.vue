@@ -1,10 +1,10 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-12 14:33:41
+ * @LastEditTime: 2021-01-13 16:14:29
 -->
 <template>
-  <div class="map-page" ref="scroll" id="scroll" @scroll="scroll">
+  <div class="map-page" ref="scroll" id="scroll">
     <div class="prevent-wrap" v-show="showPrevent"></div>
     <audio preload src="../assets/music/bgm01.mp3" loop style="display:none" ref="bgmusic"></audio>
     <audio preload src="../assets/music/airplane.mp3" style="display:none" ref="airmusic"></audio>
@@ -15,17 +15,21 @@
     <img class="icon-compass" src="../assets/icon/compass.png" alt="" />
 
     <!-- 头部标题 -->
-    <div class="page-title">萧山年货地图</div>
+    <!-- <div class="page-title">萧山年货地图</div> -->
     <!-- 地图区域 -->
     <div class="map-wrap">
       <!-- 大风车 -->
-      <div class="icon-dfc"></div>
+      <!-- <div class="icon-dfc"></div> -->
       <!-- 湖泊 -->
-      <div class="icon-lake"></div>
+      <!-- <div class="icon-lake"></div> -->
       <!-- 小人 -->
       <div class="icon-boy" ref="boy" :style="boyStyle"></div>
       <!-- 地点 -->
-      <div class="place" v-for="item in placeList" :key="item.name" :style="{ top: item.position.top, left: item.position.left }" @click="bindPlace(item)"></div>
+      <div class="place" v-for="item in placeList" :key="item.name" :style="{ top: item.position.top, left: item.position.left }" @click="bindPlace(item)">
+        <div class="place-icon">
+          <span class="place-text">{{ item.name }}</span>
+        </div>
+      </div>
     </div>
 
     <!-- 开始弹框 -->
@@ -39,22 +43,20 @@
     <!-- 详情弹框 -->
     <van-popup v-model="showDetail">
       <div class="place-detail-wrap popup-wrap">
-        <van-swipe class="my-swipe" :show-indicators="false">
-          <van-swipe-item v-for="(item, index) in showPlace.shops" :key="index">
-            <div class="shop-item">
-              <h2 class="title">{{ item.title }}</h2>
-              <img :src="item.banner" alt="" />
-              <a
-                href="https://detail.tmall.com/item.htm?id=530141938640&ut_sk=1.W/PnAugBdt8DAER6aNk/Yhjt_21380790_1609984124723.Copy.1&sourceType=item&price=58&origin_price=88&suid=87D4E56C-172E-4B70-B7E6-928450C34AE3&shareUniqueId=6910038693&un=11662d2ef49431bbbbeeeafdb2768e28&share_crt_v=1&spm=a2159r.13376460.0.0&sp_tk=WjkyOGNIVnBXc0c=&cpp=1&shareurl=true&short_name=h.4hkCFAU&bxsign=scd6gsURy5SB_Oc2Cl_kGmvL9u4SP1jSwnv1oyCsWtuhgnMnKk9hcl8CvwcWBTL3uwOMluT7x54Ji5efzghVwzXYNhAhnzi5sYnTigcKvSN5C4&sm=91d411&app=chrome"
-                >前往详情tmall</a
-              >
-              <br />
-              <a href="https://qr.1688.com/share.html?secret=Owwa2d99">前往详情1688</a>
-              <p class="bot-text">所属公司：{{ item.company }}</p>
-              <p class="bot-text">所属街道：{{ showPlace.name }}</p>
-            </div>
-          </van-swipe-item>
-        </van-swipe>
+        <div class="shop-item" v-if="showPlace.shops">
+          <h2 class="title">{{ showPlace.shops.title }}</h2>
+          <img :src="showPlace.shops.banner" alt="" />
+          <div v-if="showPlace.shops.type == 'taobao'">
+            <p class="tip">
+              复制下方口令在淘宝打开即可
+              <button class="copy-btn" data-clipboard-target="#tbKey" @click="copyTbWord(showPlace.shops.key)">复制口令</button>
+            </p>
+            <p class="tb-key" id="tbKey">{{ showPlace.shops.key }}</p>
+          </div>
+
+          <a :href="showPlace.shops.link" v-if="showPlace.shops.type == '1688'">前往详情</a>
+          <p class="bot-text">所属公司：{{ showPlace.name }}</p>
+        </div>
       </div>
       <img src="@/assets/icon/close.png" class="icon-close" alt="" @click="showDetail = false" />
     </van-popup>
@@ -62,6 +64,7 @@
 </template>
 
 <script>
+import Clipboard from "clipboard";
 import Jquery from "jquery";
 import mydata from "../../public/data.js";
 const Unit_Time = 100; //单位时间
@@ -80,7 +83,7 @@ export default {
     return {
       fly: false,
       showPrevent: false, //小人开始移动时的放触摸遮罩
-      showStart: true, //开始弹框
+      showStart: false, //开始弹框
       showDetail: false, //详情弹框
 
       boyStyle: {
@@ -91,7 +94,7 @@ export default {
         transitionProperty: "",
       }, //小人属性
       placeList: [], //地点集合
-      showPlace: [], //要展示的地点信息
+      showPlace: {}, //要展示的地点信息
     };
   },
   created() {
@@ -102,6 +105,22 @@ export default {
     this.init();
   },
   methods: {
+    //复制口令
+    copyTbWord(value) {
+      let copy = new Clipboard("#tbKey", {
+        text: function() {
+          return value;
+        },
+      });
+      copy.on("success", function(e) {
+        console.log(e);
+      });
+
+      copy.on("error", function(e) {
+        console.log(e);
+      });
+    },
+
     //资源加载
     resourceLoad() {
       // let loading=this.$toast.loading({
@@ -161,10 +180,6 @@ export default {
       const screenHeight = document.body.clientHeight;
       scrollElement.scrollLeft = (width - screenWidth) / 2;
       scrollElement.scrollTop = (height - screenHeight) / 2;
-    },
-
-    scroll(e) {
-      // console.log(e.srcElement.scrollTop, e.target.scrollTop);
     },
 
     //页面横向跟随小人  xtime  小人横向走动时间 pleft 小人要移动到的x轴位置  boyLeft 小人运动前的位置
@@ -253,16 +268,6 @@ export default {
         this.boyStyle.backgroundPosition = "0% 100%";
         let tag = 0;
         RightInterval = setInterval(() => {
-          // if (tag === 0) {
-          //   this.boyStyle.backgroundPosition = "32% 100%";
-          //   tag++;
-          // } else if (tag === 1) {
-          //   this.boyStyle.backgroundPosition = "66% 100%";
-          //   tag++;
-          // } else if (tag === 2) {
-          //   this.boyStyle.backgroundPosition = "98% 100%";
-          //   tag = 0;
-          // }
           if (tag % 2 == 0) {
             this.boyStyle.backgroundPosition = "50% 100%";
           } else {
@@ -275,16 +280,6 @@ export default {
         this.boyStyle.backgroundPosition = "0% 66%";
         let tag = 0;
         RightInterval = setInterval(() => {
-          // if (tag === 0) {
-          //   this.boyStyle.backgroundPosition = "32% 66%";
-          //   tag++;
-          // } else if (tag === 1) {
-          //   this.boyStyle.backgroundPosition = "66% 66%";
-          //   tag++;
-          // } else if (tag === 2) {
-          //   this.boyStyle.backgroundPosition = "98% 66%";
-          //   tag = 0;
-          // }
           if (tag % 2 == 0) {
             this.boyStyle.backgroundPosition = "50% 66%";
           } else {
@@ -421,9 +416,19 @@ export default {
     img {
       width: 100%;
     }
+    .tb-key {
+      font-weight: bold;
+    }
     .bot-text {
       text-align: right;
       font-size: 12px;
+    }
+    .copy-btn {
+      color: #fff;
+      font-size: 12px;
+      background-color: #c16a46;
+      border: none;
+      border-radius: 2px;
     }
   }
 }
@@ -471,18 +476,20 @@ export default {
   left: 20px;
   width: 30px;
   z-index: 11;
+  transform: rotate(30deg);
 }
 .map-page {
-  background-color: #fff2c6;
+  // background-color: #fff2c6;
+  background-color: #fff;
   height: 100vh;
   overflow-x: scroll;
   // scroll-behavior: smooth;
 }
 // 地图容器
 .map-wrap {
-  width: 390vh;
+  width: 432vh;
   height: 180vh;
-  background-image: url("~@/assets/image/map.png");
+  background-image: url("~@/assets/image/map-4000-1.jpg");
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
@@ -493,7 +500,7 @@ export default {
 .icon-boy {
   width: 50px;
   height: 86px;
-  background-image: url("~@/assets/icon/man-3.png");
+  background-image: url("~@/assets/icon/man-5.png");
   background-repeat: no-repeat;
   position: absolute;
   top: 50%;
@@ -528,11 +535,27 @@ export default {
 
 .place {
   position: absolute;
-  width: 40px;
-  height: 62.5px;
-  background-image: url("~@/assets/icon/location.png");
-  background-size: contain;
-  background-repeat: no-repeat;
   transform: translate(-50%, -50%);
+  .place-icon {
+    width: 40px;
+    height: 62.5px;
+    background-image: url("~@/assets/icon/location.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .place-text {
+    font-size: 12px;
+    color: #333;
+    display: block;
+    background-color: rgba(0, 0, 0, 0);
+    position: absolute;
+    top: 74%;
+    width: 90px;
+    text-align: center;
+    transform: scale(0.7);
+    left: -25px;
+    line-height: 1;
+    font-weight: bold;
+  }
 }
 </style>
