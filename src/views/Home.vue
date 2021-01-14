@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-14 13:58:43
+ * @LastEditTime: 2021-01-14 15:47:27
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -49,13 +49,15 @@
       <div class="place-detail-wrap popup-wrap">
         <div class="shop-item" v-if="showPlace.shops">
           <h2 class="title">{{ showPlace.shops.title }}</h2>
-          <img :src="showPlace.shops.banner" alt="" />
+          <!-- <img :src="showPlace.shops.banner" alt="" /> -->
+          <div class="img" :style="'background:url(' + showPlace.shops.banner + ')center center / cover no-repeat'"></div>
           <div v-if="showPlace.shops.type == 'taobao'">
+            <!-- data-clipboard-target="#target" -->
             <p class="tip">
-              复制下方口令在淘宝打开即可
-              <button class="copy-btn" data-clipboard-target="#target" @click="copyTbWord">复制口令</button>
+              点击"复制口令"在淘宝打开即可
+              <button class="copy-btn" :data-clipboard-text="showPlace.shops.key" @click="copyTbWord">复制口令</button>
             </p>
-            <p class="tb-key" id="target">{{ showPlace.shops.key }}</p>
+            <!-- <p class="tb-key" id="target">{{ showPlace.shops.key }}</p> -->
           </div>
 
           <a :href="showPlace.shops.link" v-if="showPlace.shops.type == '1688'">前往详情</a>
@@ -161,7 +163,7 @@ export default {
       let airInterval = setInterval(() => {
         airMusic.play();
         this.fly = true;
-      }, 15000);
+      }, 60000);
       this.$once("hook:beforeDestroy", function() {
         clearInterval(airInterval);
       });
@@ -406,6 +408,7 @@ export default {
 }
 .place-detail-wrap {
   overflow-y: scroll;
+  max-height: 100vh;
   .shop-item {
     font-size: 14px;
     .title {
@@ -414,8 +417,10 @@ export default {
       font-weight: bold;
       margin-top: 0;
     }
-    img {
-      width: 100%;
+    .img {
+      margin: 0 auto;
+      width: 80vw;
+      height: 80vw;
     }
     .tb-key {
       font-weight: bold;
