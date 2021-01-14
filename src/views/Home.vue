@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-13 16:14:29
+ * @LastEditTime: 2021-01-14 13:58:43
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -22,6 +22,10 @@
       <!-- <div class="icon-dfc"></div> -->
       <!-- 湖泊 -->
       <!-- <div class="icon-lake"></div> -->
+      <!-- 标题 -->
+      <div class="page-title"></div>
+      <!-- 地图说明 -->
+      <div class="map-intro"></div>
       <!-- 小人 -->
       <div class="icon-boy" ref="boy" :style="boyStyle"></div>
       <!-- 地点 -->
@@ -49,9 +53,9 @@
           <div v-if="showPlace.shops.type == 'taobao'">
             <p class="tip">
               复制下方口令在淘宝打开即可
-              <button class="copy-btn" data-clipboard-target="#tbKey" @click="copyTbWord(showPlace.shops.key)">复制口令</button>
+              <button class="copy-btn" data-clipboard-target="#target" @click="copyTbWord">复制口令</button>
             </p>
-            <p class="tb-key" id="tbKey">{{ showPlace.shops.key }}</p>
+            <p class="tb-key" id="target">{{ showPlace.shops.key }}</p>
           </div>
 
           <a :href="showPlace.shops.link" v-if="showPlace.shops.type == '1688'">前往详情</a>
@@ -83,7 +87,7 @@ export default {
     return {
       fly: false,
       showPrevent: false, //小人开始移动时的放触摸遮罩
-      showStart: false, //开始弹框
+      showStart: true, //开始弹框
       showDetail: false, //详情弹框
 
       boyStyle: {
@@ -106,16 +110,13 @@ export default {
   },
   methods: {
     //复制口令
-    copyTbWord(value) {
-      let copy = new Clipboard("#tbKey", {
-        text: function() {
-          return value;
-        },
-      });
-      copy.on("success", function(e) {
+    copyTbWord() {
+      let copy = new Clipboard(".copy-btn");
+      copy.on("success", (e) => {
         console.log(e);
+        this.$toast("口令复制成功");
+        copy.destroy();
       });
-
       copy.on("error", function(e) {
         console.log(e);
       });
@@ -429,6 +430,7 @@ export default {
       background-color: #c16a46;
       border: none;
       border-radius: 2px;
+      padding: 5px;
     }
   }
 }
@@ -440,15 +442,25 @@ export default {
 
 //页面标题
 .page-title {
-  width: 100%;
-  font-size: 16px;
-  font-weight: bold;
   position: absolute;
-  padding-top: 20px;
-  height: 10%;
-  text-align: center;
-  // z-index: 10;
-  // background-color: #fff2c6;
+  left: 10%;
+  top: 10%;
+  width: 234.4px;
+  height: 47.6px;
+  background-image: url("~@/assets/image/title.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+//地图说明
+.map-intro {
+  position: absolute;
+  left: 40%;
+  top: 70%;
+  width: 300px;
+  height: 300px;
+  background-image: url("~@/assets/image/intro.png");
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 // 飞行飞机
 .fly-plane {
@@ -479,8 +491,8 @@ export default {
   transform: rotate(30deg);
 }
 .map-page {
-  // background-color: #fff2c6;
-  background-color: #fff;
+  background-color: #fff2c6;
+  // background-color: #fff;
   height: 100vh;
   overflow-x: scroll;
   // scroll-behavior: smooth;
@@ -489,12 +501,12 @@ export default {
 .map-wrap {
   width: 432vh;
   height: 180vh;
-  background-image: url("~@/assets/image/map-4000-1.jpg");
+  background-image: url("~@/assets/image/map-4000-3.png");
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
   position: relative;
-  top: 10%;
+  // top: 10%;
 }
 // 小人
 .icon-boy {
