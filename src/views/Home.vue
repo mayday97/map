@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-14 15:47:27
+ * @LastEditTime: 2021-01-15 17:34:41
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -9,19 +9,14 @@
     <audio preload src="../assets/music/bgm01.mp3" loop style="display:none" ref="bgmusic"></audio>
     <audio preload src="../assets/music/airplane.mp3" style="display:none" ref="airmusic"></audio>
 
+    <img :style="{ width: music ? '40px' : '' }" class="icon-music" :src="music ? require('../assets/icon/music-yes.png') : require('../assets/icon/music-no.png')" alt="" @click="bgMusicChange" />
     <!-- 飞机 -->
     <img class="fly-plane" :class="fly && 'fly'" src="../assets/icon/plane.png" alt="" v-show="fly" @animationEnd="flyEnd" @webkitAnimationEnd="flyEnd" />
     <!-- 指南针 -->
     <img class="icon-compass" src="../assets/icon/compass.png" alt="" />
 
-    <!-- 头部标题 -->
-    <!-- <div class="page-title">萧山年货地图</div> -->
     <!-- 地图区域 -->
     <div class="map-wrap">
-      <!-- 大风车 -->
-      <!-- <div class="icon-dfc"></div> -->
-      <!-- 湖泊 -->
-      <!-- <div class="icon-lake"></div> -->
       <!-- 标题 -->
       <div class="page-title"></div>
       <!-- 地图说明 -->
@@ -47,24 +42,17 @@
     <!-- 详情弹框 -->
     <van-popup v-model="showDetail">
       <div class="place-detail-wrap popup-wrap">
-        <div class="shop-item" v-if="showPlace.shops">
-          <h2 class="title">{{ showPlace.shops.title }}</h2>
-          <!-- <img :src="showPlace.shops.banner" alt="" /> -->
+        <div class="shop-item " v-if="showPlace.shops">
           <div class="img" :style="'background:url(' + showPlace.shops.banner + ')center center / cover no-repeat'"></div>
-          <div v-if="showPlace.shops.type == 'taobao'">
-            <!-- data-clipboard-target="#target" -->
-            <p class="tip">
-              点击"复制口令"在淘宝打开即可
-              <button class="copy-btn" :data-clipboard-text="showPlace.shops.key" @click="copyTbWord">复制口令</button>
-            </p>
-            <!-- <p class="tb-key" id="target">{{ showPlace.shops.key }}</p> -->
+          <div style="flex:1">
+            <h2 class="title">{{ showPlace.shops.title }}</h2>
+            <p class="text">{{ showPlace.name }}出品</p>
+            <button class="copy-btn" v-if="showPlace.shops.type == 'taobao'" :data-clipboard-text="showPlace.shops.key" @click="copyTbWord">复制口令</button>
+            <a :href="showPlace.shops.link" class="copy-btn" v-if="showPlace.shops.type == '1688'">立即购买</a>
           </div>
-
-          <a :href="showPlace.shops.link" v-if="showPlace.shops.type == '1688'">前往详情</a>
-          <p class="bot-text">所属公司：{{ showPlace.name }}</p>
         </div>
       </div>
-      <img src="@/assets/icon/close.png" class="icon-close" alt="" @click="showDetail = false" />
+      <img src="@/assets/icon/close-2.png" class="icon-close" alt="" @click="showDetail = false" />
     </van-popup>
   </div>
 </template>
@@ -87,12 +75,16 @@ export default {
   },
   data() {
     return {
+      airInterval: null,
+      music: true,
       fly: false,
       showPrevent: false, //小人开始移动时的放触摸遮罩
       showStart: true, //开始弹框
       showDetail: false, //详情弹框
 
       boyStyle: {
+        width: "64px",
+        height: "64px",
         top: "50%",
         left: "50%",
         backgroundPosition: "0% 0%",
@@ -111,15 +103,36 @@ export default {
     this.init();
   },
   methods: {
+    //打开关闭音乐
+    bgMusicChange() {
+      const bgMusic = this.$refs.bgmusic;
+      const airMusic = this.$refs.airmusic;
+      if (this.music) {
+        this.music = false;
+        bgMusic.pause();
+        airMusic.pause();
+        clearInterval(this.airInterval);
+      } else {
+        this.music = true;
+        bgMusic.play();
+        airMusic.play();
+        this.fly = true;
+        this.airInterval = setInterval(() => {
+          airMusic.play();
+          this.fly = true;
+        }, 60000);
+      }
+    },
     //复制口令
     copyTbWord() {
       let copy = new Clipboard(".copy-btn");
       copy.on("success", (e) => {
         console.log(e);
-        this.$toast("口令复制成功");
+        this.$toast("口令复制成功,请在淘宝打开");
         copy.destroy();
       });
       copy.on("error", function(e) {
+        this.$toast("口令复制失败");
         console.log(e);
       });
     },
@@ -131,7 +144,7 @@ export default {
       //   duration:0,
       //   forbidClick:true
       // })
-      let imgs = [require("@/assets/image/map.png")];
+      let imgs = [require("@/assets/image/map-4000-3.png")];
       for (let img of imgs) {
         let image = new Image();
         image.src = img;
@@ -160,12 +173,12 @@ export default {
       airMusic.play();
       this.showStart = false;
       this.fly = true;
-      let airInterval = setInterval(() => {
+      this.airInterval = setInterval(() => {
         airMusic.play();
         this.fly = true;
       }, 60000);
       this.$once("hook:beforeDestroy", function() {
-        clearInterval(airInterval);
+        clearInterval(this.airInterval);
       });
     },
 
@@ -244,9 +257,9 @@ export default {
 
      *位置     立正     左脚       右脚
      *向下走 (0 00%) (50% 00%) (100% 00%)
-     *向上走 (0 33%) (50% 33%) (100% 33%)
-     *向左走 (0 66%) (50% 66%) (100% 66%)
-     *向右走 (0 100%) (50% 100%) (100% 100%)
+     *向左走 (0 33%) (50% 33%) (100% 33%)
+     *向右走 (0 66%) (50% 66%) (100% 66%)
+     *向上走 (0 100%) (50% 100%) (100% 100%)
      */
     //小人移动 先左右 再上下  如果xDiff大于0 则向右  yDiff大于0 则向下
     boyMove(place, boyPosition) {
@@ -268,18 +281,6 @@ export default {
       //x轴移动
       if (xDiff >= 0) {
         // //向右
-        this.boyStyle.backgroundPosition = "0% 100%";
-        let tag = 0;
-        RightInterval = setInterval(() => {
-          if (tag % 2 == 0) {
-            this.boyStyle.backgroundPosition = "50% 100%";
-          } else {
-            this.boyStyle.backgroundPosition = "100% 100%";
-          }
-          tag++;
-        }, Speed_Time);
-      } else {
-        // //向左
         this.boyStyle.backgroundPosition = "0% 66%";
         let tag = 0;
         RightInterval = setInterval(() => {
@@ -287,6 +288,18 @@ export default {
             this.boyStyle.backgroundPosition = "50% 66%";
           } else {
             this.boyStyle.backgroundPosition = "100% 66%";
+          }
+          tag++;
+        }, Speed_Time);
+      } else {
+        // //向左
+        this.boyStyle.backgroundPosition = "0% 33%";
+        let tag = 0;
+        RightInterval = setInterval(() => {
+          if (tag % 2 == 0) {
+            this.boyStyle.backgroundPosition = "50% 33%";
+          } else {
+            this.boyStyle.backgroundPosition = "100% 33%";
           }
           tag++;
         }, Speed_Time);
@@ -319,13 +332,13 @@ export default {
           }, Speed_Time);
         } else {
           // //向上
-          this.boyStyle.backgroundPosition = "0% 33%";
+          this.boyStyle.backgroundPosition = "0% 100%";
           let tag = 0;
           UpInterval = setInterval(() => {
             if (tag % 2 == 0) {
-              this.boyStyle.backgroundPosition = "50% 33%";
+              this.boyStyle.backgroundPosition = "50% 100%";
             } else {
-              this.boyStyle.backgroundPosition = "100% 33%";
+              this.boyStyle.backgroundPosition = "100% 100%";
             }
             tag++;
           }, Speed_Time);
@@ -365,6 +378,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.icon-music {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  // width: 40px;
+  // height: 25px;
+  z-index: 11;
+}
 .prevent-wrap {
   position: fixed;
   top: 0;
@@ -380,24 +401,22 @@ export default {
 }
 .popup-wrap {
   width: 94vw;
-  min-height: 300px;
-  max-height: 60vh;
-  background-color: #f1f7ea;
-  border: 4px solid #7b654a;
-  border-radius: 12px;
-  padding: 16px;
-  background-image: url("~@/assets/image/bg-popup.png");
-  background-position: right bottom;
+  height: 64.82vw;
+  max-width: 500px;
+  max-height: 334px;
+  background-image: url("~@/assets/image/bg-popup-2.png");
+  background-size: contain;
   background-repeat: no-repeat;
 }
 .start-wrap {
   text-align: center;
   .text {
     font-size: 16px;
-    line-height: 150px;
+    padding-top: 90px;
+    padding-bottom: 30px;
   }
   .start-btn {
-    width: 80%;
+    width: 50%;
     line-height: 40px;
     background-color: #ce6738;
     color: #fff;
@@ -407,51 +426,53 @@ export default {
   }
 }
 .place-detail-wrap {
-  overflow-y: scroll;
-  max-height: 100vh;
+  padding: 24px;
   .shop-item {
-    font-size: 14px;
-    .title {
-      text-align: center;
-      font-size: 16px;
-      font-weight: bold;
-      margin-top: 0;
-    }
+    display: flex;
     .img {
-      margin: 0 auto;
-      width: 80vw;
-      height: 80vw;
+      width: 50vw;
+      height: 50vw;
+      max-width: 250px;
+      max-height: 250px;
+      flex-shrink: 0;
     }
-    .tb-key {
-      font-weight: bold;
+    .title {
+      font-size: 16px;
+      text-align: center;
     }
-    .bot-text {
-      text-align: right;
+    .text {
       font-size: 12px;
+      text-align: center;
     }
     .copy-btn {
+      margin: 0 auto;
+      display: block;
+      width: 80px;
+      height: 34px;
+      line-height: 34px;
+      background-color: #ce6738;
       color: #fff;
-      font-size: 12px;
-      background-color: #c16a46;
       border: none;
-      border-radius: 2px;
-      padding: 5px;
+      border-radius: 4px;
+      font-size: 12px;
+      text-align: center;
     }
   }
 }
 .icon-close {
   display: block;
-  width: 30px;
+  width: 50px;
   margin: 30px auto 0 auto;
 }
 
 //页面标题
 .page-title {
   position: absolute;
-  left: 10%;
+  left: 2%;
   top: 10%;
-  width: 234.4px;
-  height: 47.6px;
+  //2.58
+  width: 500px;
+  height: 193px;
   background-image: url("~@/assets/image/title.png");
   background-size: contain;
   background-repeat: no-repeat;
@@ -504,8 +525,8 @@ export default {
 }
 // 地图容器
 .map-wrap {
-  width: 432vh;
-  height: 180vh;
+  width: 456vh;
+  height: 190vh;
   background-image: url("~@/assets/image/map-4000-3.png");
   background-size: contain;
   background-position: center center;
@@ -515,9 +536,9 @@ export default {
 }
 // 小人
 .icon-boy {
-  width: 50px;
-  height: 86px;
-  background-image: url("~@/assets/icon/man-5.png");
+  // width: 64px; /* no */
+  // height: 64px; /* no */
+  background-image: url("~@/assets/icon/man-7.png");
   background-repeat: no-repeat;
   position: absolute;
   top: 50%;
@@ -527,52 +548,32 @@ export default {
   z-index: 100;
 }
 
-//大风车
-.icon-dfc {
-  width: 100px;
-  height: 100px;
-  background-image: url("~@/assets/image/dfc.gif");
-  background-size: cover;
-  background-repeat: no-repeat;
-  position: absolute;
-  top: 100px;
-  left: 100px;
-}
-//湖泊
-.icon-lake {
-  width: 100px;
-  height: 100px;
-  background-image: url("~@/assets/image/lake.gif");
-  background-size: cover;
-  background-repeat: no-repeat;
-  position: absolute;
-  top: 200px;
-  left: 80px;
-}
-
 .place {
   position: absolute;
   transform: translate(-50%, -50%);
   .place-icon {
-    width: 40px;
-    height: 62.5px;
+    width: 30px;
+    height: 44.8px;
     background-image: url("~@/assets/icon/location.png");
     background-size: contain;
     background-repeat: no-repeat;
   }
   .place-text {
+    background-color: #fff;
     font-size: 12px;
     color: #333;
     display: block;
-    background-color: rgba(0, 0, 0, 0);
+    // background-color: rgba(0, 0, 0, 0);
     position: absolute;
-    top: 74%;
+    top: 90%;
     width: 90px;
     text-align: center;
-    transform: scale(0.7);
-    left: -25px;
+    transform: scale(0.8);
+    left: -30px;
     line-height: 1;
     font-weight: bold;
+    padding: 2px;
+    border-radius: 4px;
   }
 }
 </style>

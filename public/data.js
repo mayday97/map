@@ -1,7 +1,7 @@
 /*
  * @Author: xiaoyu
  * @Date: 2020-12-25 10:05:17
- * @LastEditTime: 2021-01-13 15:34:49
+ * @LastEditTime: 2021-01-15 17:12:19
  */
 export default {
   list: [
@@ -22,8 +22,8 @@ export default {
     {
       name: "杭州仲三农业发展有限公司",
       position: {
-        top: "50%",
-        left: "56%",
+        top: "46%",
+        left: "55%",
       },
       shops: {
         title: "酱鸭",
@@ -36,8 +36,8 @@ export default {
     {
       name: "杭州巨佳茶业有限公司",
       position: {
-        top: "56%",
-        left: "37%",
+        top: "58%",
+        left: "36%",
       },
       shops: {
         title: "巨佳龙井茶",
@@ -50,7 +50,7 @@ export default {
     {
       name: "杭州睿腾电子商务有限公司",
       position: {
-        top: "50%",
+        top: "47%",
         left: "77%",
       },
       shops: {
@@ -64,7 +64,7 @@ export default {
     {
       name: "杭州党山酱萃食品有限公司",
       position: {
-        top: "57%",
+        top: "54%",
         left: "62%",
       },
       shops: {
@@ -78,8 +78,8 @@ export default {
     {
       name: "杭州萧山云门寺生态茶场",
       position: {
-        top: "65%",
-        left: "16%",
+        top: "59%",
+        left: "17%",
       },
       shops: {
         title: "绿茶",
@@ -134,7 +134,7 @@ export default {
     {
       name: "杭州舒禾农产品有限公司",
       position: {
-        top: "36%",
+        top: "39%",
         left: "39%",
       },
       shops: {
@@ -148,8 +148,8 @@ export default {
     {
       name: "龚老汉控股集团有限公司",
       position: {
-        top: "29%",
-        left: "76%",
+        top: "26%",
+        left: "75%",
       },
       shops: {
         title: "有机甲鱼",
@@ -162,8 +162,8 @@ export default {
     {
       name: "杭州小龙食品有限公司",
       position: {
-        top: "46%",
-        left: "34%",
+        top: "45%",
+        left: "32%",
       },
       shops: {
         title: "松子",
@@ -190,8 +190,8 @@ export default {
     {
       name: "杭州熠苗贸易有限公司",
       position: {
-        top: "45%",
-        left: "67%",
+        top: "46%",
+        left: "66%",
       },
       shops: {
         title: "萝卜条",
@@ -204,7 +204,7 @@ export default {
     {
       name: "杭州德兴蜂业有限公司",
       position: {
-        top: "44%",
+        top: "43%",
         left: "59%",
       },
       shops: {
@@ -218,7 +218,7 @@ export default {
     {
       name: "杭州徐同泰食品有限公司",
       position: {
-        top: "76%",
+        top: "73%",
         left: "13%",
       },
       shops: {
@@ -246,8 +246,8 @@ export default {
     {
       name: "杭州翠沁斋食品股份有限公司",
       position: {
-        top: "17%",
-        left: "39%",
+        top: "19%",
+        left: "38%",
       },
       shops: {
         title: "黑芝麻糕点",
@@ -260,7 +260,7 @@ export default {
     {
       name: "杭州膳礼坊网络科技有限公司",
       position: {
-        top: "49%",
+        top: "51%",
         left: "35%",
       },
       shops: {
@@ -274,8 +274,8 @@ export default {
     {
       name: "杭州金迈田种养殖有限公司",
       position: {
-        top: "88%",
-        left: "25.5%",
+        top: "80%",
+        left: "27.5%",
       },
       shops: {
         title: "蕃茄",
@@ -288,7 +288,7 @@ export default {
     {
       name: "杭州百晨食品有限公司",
       position: {
-        top: "55%",
+        top: "52%",
         left: "30%",
       },
       shops: {
@@ -302,8 +302,8 @@ export default {
     {
       name: "杭州百乡缘农业开发有限公司",
       position: {
-        top: "88%",
-        left: "25.5%",
+        top: "89%",
+        left: "24.5%",
       },
       shops: {
         title: "鸭",
@@ -316,7 +316,7 @@ export default {
     {
       name: "杭州亿舟农业发展有限公司 ",
       position: {
-        top: "36%",
+        top: "34%",
         left: "74%",
       },
       shops: {
@@ -330,7 +330,7 @@ export default {
     {
       name: "杭州陈源昌食品有限公司",
       position: {
-        top: "50%",
+        top: "47%",
         left: "73%",
       },
       shops: {
@@ -344,8 +344,8 @@ export default {
     {
       name: "杭州传农梅干菜专业合作社 ",
       position: {
-        top: "56%",
-        left: "73%",
+        top: "57%",
+        left: "72%",
       },
       shops: {
         title: "梅干菜",
