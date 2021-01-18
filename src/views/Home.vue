@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-15 17:34:41
+ * @LastEditTime: 2021-01-18 17:45:48
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -30,15 +30,6 @@
         </div>
       </div>
     </div>
-
-    <!-- 开始弹框 -->
-    <van-popup v-model="showStart" :close-on-click-overlay="false">
-      <div class="popup-wrap start-wrap">
-        <p class="text">让我们开始探索萧山的秘密吧。</p>
-        <button class="start-btn" @click="handleStart">开始</button>
-      </div>
-    </van-popup>
-
     <!-- 详情弹框 -->
     <van-popup v-model="showDetail">
       <div class="place-detail-wrap popup-wrap">
@@ -53,6 +44,19 @@
         </div>
       </div>
       <img src="@/assets/icon/close-2.png" class="icon-close" alt="" @click="showDetail = false" />
+    </van-popup>
+
+    <!-- 开始动画 -->
+    <van-popup v-model="showAction" :close-on-click-overlay="false" :overlay-style="{ backgroundColor: 'rgba(0,0,0,.8)' }">
+      <div class="animate-bg" :class="flag && 'animate'" @webkitAnimationEnd="animateEnd" @animationEnd="animateEnd"></div>
+    </van-popup>
+
+    <!-- 开始弹框 -->
+    <van-popup v-model="showStart" :close-on-click-overlay="false">
+      <div class="start-wrap">
+        <img class="img" src="../assets/image/start.jpg" alt="" />
+        <button class="start-btn" @click="handleStart">开始</button>
+      </div>
     </van-popup>
   </div>
 </template>
@@ -75,6 +79,9 @@ export default {
   },
   data() {
     return {
+      showAction: false, //动画
+      flag: false,
+
       airInterval: null,
       music: true,
       fly: false,
@@ -139,29 +146,30 @@ export default {
 
     //资源加载
     resourceLoad() {
-      // let loading=this.$toast.loading({
-      //   message:"资源加载中...",
-      //   duration:0,
-      //   forbidClick:true
-      // })
-      let imgs = [require("@/assets/image/map-4000-3.png")];
+      let loading = this.$toast.loading({
+        message: "资源加载中...",
+        duration: 0,
+        forbidClick: true,
+      });
+      let imgs = [require("@/assets/image/bg-popup-2.png"), require("@/assets/image/map-4000-3.png"), require("@/assets/image/map-circle.png")];
+      let count = 0;
       for (let img of imgs) {
         let image = new Image();
         image.src = img;
         image.onload = (e) => {
           console.log("背景图预加载成功");
+          count++;
+          if (count == imgs.length) {
+            loading.clear();
+          }
         };
         image.onerror = (e) => {
           console.log("背景图预加载失败", e);
+          count++;
+          if (count == imgs.length) {
+            loading.clear();
+          }
         };
-      }
-      let audios = [require("@/assets/music/bgm01.mp3"), require("@/assets/music/airplane.mp3")];
-      for (let item of audios) {
-        let audio = new Audio();
-        audio.src = item;
-        audio.addEventListener("canplaythrough", (e) => {
-          // console.log(e);
-        });
       }
     },
 
@@ -171,7 +179,19 @@ export default {
       const airMusic = this.$refs.airmusic;
       bgMusic.play();
       airMusic.play();
+      airMusic.pause();
       this.showStart = false;
+      this.showAction = true;
+      setTimeout(() => {
+        this.flag = true;
+      }, 500);
+    },
+
+    //地球旋转动画结束
+    animateEnd() {
+      const airMusic = this.$refs.airmusic;
+      this.showAction = false;
+      airMusic.play();
       this.fly = true;
       this.airInterval = setInterval(() => {
         airMusic.play();
@@ -378,6 +398,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.animate-bg {
+  width: 200px;
+  height: 200px;
+  background-image: url("../assets/image/map-circle.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.animate {
+  animation: map-circle 3s linear;
+}
+@keyframes map-circle {
+  0% {
+    transform: rotate(0);
+    width: 200px;
+    height: 200px;
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-180deg);
+    width: 600px;
+    height: 600px;
+    opacity: 0.5;
+  }
+}
+
 .icon-music {
   position: fixed;
   top: 80px;
@@ -409,11 +454,13 @@ export default {
   background-repeat: no-repeat;
 }
 .start-wrap {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f6f7f4;
+  overflow: hidden;
   text-align: center;
-  .text {
-    font-size: 16px;
-    padding-top: 90px;
-    padding-bottom: 30px;
+  .img {
+    width: 90%;
   }
   .start-btn {
     width: 50%;
@@ -516,6 +563,7 @@ export default {
   z-index: 11;
   transform: rotate(30deg);
 }
+
 .map-page {
   background-color: #fff2c6;
   // background-color: #fff;
@@ -523,6 +571,7 @@ export default {
   overflow-x: scroll;
   // scroll-behavior: smooth;
 }
+
 // 地图容器
 .map-wrap {
   width: 456vh;
@@ -534,6 +583,7 @@ export default {
   position: relative;
   // top: 10%;
 }
+
 // 小人
 .icon-boy {
   // width: 64px; /* no */
