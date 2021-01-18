@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-18 17:45:48
+ * @LastEditTime: 2021-01-18 18:27:53
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -47,7 +47,7 @@
     </van-popup>
 
     <!-- 开始动画 -->
-    <van-popup v-model="showAction" :close-on-click-overlay="false" :overlay-style="{ backgroundColor: 'rgba(0,0,0,.8)' }">
+    <van-popup v-model="showAction" :close-on-click-overlay="false" :overlay-style="{ backgroundColor: '#007ABB' }">
       <div class="animate-bg" :class="flag && 'animate'" @webkitAnimationEnd="animateEnd" @animationEnd="animateEnd"></div>
     </van-popup>
 
@@ -100,6 +100,7 @@ export default {
       }, //小人属性
       placeList: [], //地点集合
       showPlace: {}, //要展示的地点信息
+      initBoy: null, //初始时小人走路动画定时器
     };
   },
   created() {
@@ -216,6 +217,16 @@ export default {
       const screenHeight = document.body.clientHeight;
       scrollElement.scrollLeft = (width - screenWidth) / 2;
       scrollElement.scrollTop = (height - screenHeight) / 2;
+      // 小人原地走
+      let tag = 0;
+      this.initBoy = setInterval(() => {
+        if (tag % 2 == 0) {
+          this.boyStyle.backgroundPosition = "50% 0%";
+        } else {
+          this.boyStyle.backgroundPosition = "100% 0%";
+        }
+        tag++;
+      }, Speed_Time);
     },
 
     //页面横向跟随小人  xtime  小人横向走动时间 pleft 小人要移动到的x轴位置  boyLeft 小人运动前的位置
@@ -384,6 +395,7 @@ export default {
 
     //点击地点
     bindPlace(e) {
+      clearInterval(this.initBoy);
       const boyPosition = this.getBoyPosition(); //小人位置
       this.boyMove(e, boyPosition);
     },
@@ -406,7 +418,7 @@ export default {
   background-repeat: no-repeat;
 }
 .animate {
-  animation: map-circle 3s linear;
+  animation: map-circle 5s linear forwards;
 }
 @keyframes map-circle {
   0% {
@@ -609,9 +621,9 @@ export default {
     background-repeat: no-repeat;
   }
   .place-text {
-    background-color: #fff;
+    background-color: #ce6738;
+    color: #fff;
     font-size: 12px;
-    color: #333;
     display: block;
     // background-color: rgba(0, 0, 0, 0);
     position: absolute;
