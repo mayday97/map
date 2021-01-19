@@ -1,7 +1,7 @@
 /*
  * @Author: xiaoyu
  * @Date: 2020-12-25 10:05:17
- * @LastEditTime: 2021-01-19 13:50:25
+ * @LastEditTime: 2021-01-19 17:58:44
  */
 export default {
   list: [
@@ -52,8 +52,8 @@ export default {
     {
       name: "杭州睿腾电子商务有限公司",
       position: {
-        top: "17%",
-        left: "43%",
+        top: "16%",
+        left: "38%",
       },
       shops: {
         title: "烤肠",
@@ -248,8 +248,8 @@ export default {
     {
       name: "杭州翠沁斋食品股份有限公司",
       position: {
-        top: "19%",
-        left: "38%",
+        top: "20%",
+        left: "37%",
       },
       shops: {
         title: "黑芝麻糕点",

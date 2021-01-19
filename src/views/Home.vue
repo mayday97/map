@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-19 15:24:35
+ * @LastEditTime: 2021-01-19 17:55:57
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -48,15 +48,22 @@
       <img src="@/assets/icon/close-2.png" class="icon-close" alt="" @click="showDetail = false" />
     </van-popup>
 
+    <!-- 地图弹出动画 -->
+    <van-popup v-model="mappup">
+      <div class="map-pup-wrap">
+        <div :class="flag2 ? 'map-pup-bg' : null" @webkitAnimationEnd="mapanimateEnd" @animationEnd="mapanimateEnd"></div>
+      </div>
+    </van-popup>
+
     <!-- 开始动画 -->
-    <van-popup v-model="showAction" :close-on-click-overlay="false" :overlay-style="{ backgroundColor: '#007ABB' }">
+    <van-popup v-model="showAction" :close-on-click-overlay="false" overlay-class="animate-bg-bg">
       <div class="animate-bg" :class="flag && 'animate'" @webkitAnimationEnd="animateEnd" @animationEnd="animateEnd"></div>
     </van-popup>
 
     <!-- 开始弹框 -->
     <van-popup v-model="showStart" :close-on-click-overlay="false">
       <div class="start-wrap">
-        <button class="start-btn" @click="handleStart">开始</button>
+        <button class="start-btn" @click="handleStart">打开地图</button>
       </div>
     </van-popup>
   </div>
@@ -80,6 +87,9 @@ export default {
   },
   data() {
     return {
+      mappup: true,
+      flag2: false,
+
       showAction: false, //动画
       flag: false,
 
@@ -182,27 +192,26 @@ export default {
       const airMusic = this.$refs.airmusic;
       bgMusic.play();
       airMusic.play();
-      this.fly = true;
-      this.airInterval = setInterval(() => {
-        airMusic.play();
-        this.fly = true;
-      }, 60000);
-      this.$once("hook:beforeDestroy", function() {
-        clearInterval(this.airInterval);
-      });
+      airMusic.pause();
 
-      // airMusic.pause();
-      // this.showStart = false;
-      // this.showAction = true;
-      // setTimeout(() => {
-      //   this.flag = true;
-      // }, 500);
+      airMusic.pause();
+      this.showStart = false;
+      this.showAction = true;
+      setTimeout(() => {
+        this.flag = true;
+      }, 500);
     },
 
     //地球旋转动画结束
     animateEnd() {
-      const airMusic = this.$refs.airmusic;
       this.showAction = false;
+      this.flag2 = true;
+    },
+
+    //地图弹出动画结束
+    mapanimateEnd() {
+      this.mappup = false;
+      const airMusic = this.$refs.airmusic;
       airMusic.play();
       this.fly = true;
       this.airInterval = setInterval(() => {
@@ -421,6 +430,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.map-pup-wrap {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #fff2c6;
+  position: relative;
+  .map-pup-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.01);
+    width: 456vh;
+    height: 190vh;
+    background-image: url("~@/assets/image/map-4000-3.png");
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    animation: scal 2s ease-in forwards;
+  }
+  @keyframes scal {
+    0% {
+      transform: translate(-50%, -50%) scale(0.01);
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+}
+
+/deep/.animate-bg-bg {
+  background: url("../assets/image/bg-2.jpg") center center / cover no-repeat;
+  // background: #45aff7;
+}
 .animate-bg {
   width: 200px;
   height: 200px;
@@ -429,7 +471,7 @@ export default {
   background-repeat: no-repeat;
 }
 .animate {
-  animation: map-circle 5s linear forwards;
+  animation: map-circle 3s ease-in forwards;
 }
 @keyframes map-circle {
   0% {
@@ -438,11 +480,14 @@ export default {
     height: 200px;
     opacity: 1;
   }
+  80% {
+    opacity: 1;
+  }
   100% {
     transform: rotate(-180deg);
     width: 600px;
     height: 600px;
-    opacity: 0.5;
+    opacity: 0.2;
   }
 }
 
@@ -450,8 +495,6 @@ export default {
   position: fixed;
   top: 80px;
   left: 20px;
-  // width: 40px;
-  // height: 25px;
   z-index: 11;
 }
 .prevent-wrap {
@@ -484,12 +527,9 @@ export default {
   background-size: contain;
   background-repeat: no-repeat;
   position: relative;
-  // .img {
-  //   width: 90%;
-  // }
   .start-btn {
     position: absolute;
-    bottom: 30px;
+    top: 600px;
     left: 25%;
     width: 50%;
     line-height: 40px;
@@ -596,10 +636,8 @@ export default {
 
 .map-page {
   background-color: #fff2c6;
-  // background-color: #fff;
   height: 100vh;
   overflow-x: scroll;
-  // scroll-behavior: smooth;
 }
 
 // 地图容器
@@ -632,8 +670,8 @@ export default {
   position: absolute;
   transform: translate(-50%, -50%);
   .place-icon {
-    width: 30px;
-    height: 44.8px;
+    width: 25px;
+    height: 37.3px;
     background-image: url("~@/assets/icon/location.png");
     background-size: contain;
     background-repeat: no-repeat;
