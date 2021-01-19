@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-18 18:27:53
+ * @LastEditTime: 2021-01-19 15:24:35
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -34,13 +34,15 @@
     <van-popup v-model="showDetail">
       <div class="place-detail-wrap popup-wrap">
         <div class="shop-item " v-if="showPlace.shops">
-          <div class="img" :style="'background:url(' + showPlace.shops.banner + ')center center / cover no-repeat'"></div>
-          <div style="flex:1">
+          <img :src="showPlace.shops.banner" alt="" class="img" />
+          <p class="text">{{ showPlace.name }}出品</p>
+          <!-- <div class="img" :style="'background:url(' + showPlace.shops.banner + ')center center / cover no-repeat'"></div> -->
+          <!-- <div style="flex:1">
             <h2 class="title">{{ showPlace.shops.title }}</h2>
             <p class="text">{{ showPlace.name }}出品</p>
             <button class="copy-btn" v-if="showPlace.shops.type == 'taobao'" :data-clipboard-text="showPlace.shops.key" @click="copyTbWord">复制口令</button>
             <a :href="showPlace.shops.link" class="copy-btn" v-if="showPlace.shops.type == '1688'">立即购买</a>
-          </div>
+          </div> -->
         </div>
       </div>
       <img src="@/assets/icon/close-2.png" class="icon-close" alt="" @click="showDetail = false" />
@@ -54,7 +56,6 @@
     <!-- 开始弹框 -->
     <van-popup v-model="showStart" :close-on-click-overlay="false">
       <div class="start-wrap">
-        <img class="img" src="../assets/image/start.jpg" alt="" />
         <button class="start-btn" @click="handleStart">开始</button>
       </div>
     </van-popup>
@@ -152,7 +153,7 @@ export default {
         duration: 0,
         forbidClick: true,
       });
-      let imgs = [require("@/assets/image/bg-popup-2.png"), require("@/assets/image/map-4000-3.png"), require("@/assets/image/map-circle.png")];
+      let imgs = [require("@/assets/image/bg-popup-2.jpg"), require("@/assets/image/map-4000-3.png"), require("@/assets/image/map-circle.png")];
       let count = 0;
       for (let img of imgs) {
         let image = new Image();
@@ -176,16 +177,26 @@ export default {
 
     //点击开始
     handleStart() {
+      this.showStart = false;
       const bgMusic = this.$refs.bgmusic;
       const airMusic = this.$refs.airmusic;
       bgMusic.play();
       airMusic.play();
-      airMusic.pause();
-      this.showStart = false;
-      this.showAction = true;
-      setTimeout(() => {
-        this.flag = true;
-      }, 500);
+      this.fly = true;
+      this.airInterval = setInterval(() => {
+        airMusic.play();
+        this.fly = true;
+      }, 60000);
+      this.$once("hook:beforeDestroy", function() {
+        clearInterval(this.airInterval);
+      });
+
+      // airMusic.pause();
+      // this.showStart = false;
+      // this.showAction = true;
+      // setTimeout(() => {
+      //   this.flag = true;
+      // }, 500);
     },
 
     //地球旋转动画结束
@@ -457,51 +468,58 @@ export default {
   background-color: rgba(0, 0, 0, 0);
 }
 .popup-wrap {
-  width: 94vw;
-  height: 64.82vw;
-  max-width: 500px;
-  max-height: 334px;
-  background-image: url("~@/assets/image/bg-popup-2.png");
+  width: 350px;
+  height: 453px;
+  background-image: url("~@/assets/image/bg-popup-2.jpg");
   background-size: contain;
   background-repeat: no-repeat;
 }
 .start-wrap {
   width: 100vw;
   height: 100vh;
-  background-color: #f6f7f4;
+  background-color: #c8290c;
   overflow: hidden;
-  text-align: center;
-  .img {
-    width: 90%;
-  }
+  background-image: url("~@/assets/image/start.jpg");
+  background-position: top center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: relative;
+  // .img {
+  //   width: 90%;
+  // }
   .start-btn {
+    position: absolute;
+    bottom: 30px;
+    left: 25%;
     width: 50%;
     line-height: 40px;
-    background-color: #ce6738;
-    color: #fff;
+    background-color: #fff0bd;
+    color: #333;
     font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 2px;
     border: none;
     border-radius: 6px;
   }
 }
 .place-detail-wrap {
-  padding: 24px;
+  padding: 50px 24px;
   .shop-item {
-    display: flex;
+    background-color: #fff;
+    text-align: center;
     .img {
-      width: 50vw;
-      height: 50vw;
-      max-width: 250px;
-      max-height: 250px;
-      flex-shrink: 0;
+      width: 80%;
     }
     .title {
       font-size: 16px;
       text-align: center;
     }
     .text {
+      margin: 0;
+      background-color: #fff;
       font-size: 12px;
       text-align: center;
+      padding-bottom: 5px;
     }
     .copy-btn {
       margin: 0 auto;
