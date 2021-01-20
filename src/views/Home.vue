@@ -74,7 +74,7 @@
     </van-popup>
 
     <!-- 开始弹框 -->
-    <van-popup v-model="showStart" :close-on-click-overlay="false">
+    <van-popup v-model="showStart" :close-on-click-overlay="false" style="width:100%;height:100%">
       <div class="start-wrap">
         <button class="start-btn" @click="handleStart">打开地图</button>
       </div>
@@ -465,7 +465,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.red-packet {
+/deep/ .red-packet {
   width: 80vw;
   // background-color: #fff;
 
@@ -577,8 +577,8 @@ export default {
   background-repeat: no-repeat;
 }
 .start-wrap {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background-color: #c8290c;
   overflow: hidden;
   background-image: url("~@/assets/image/start.jpg");
@@ -588,7 +588,7 @@ export default {
   position: relative;
   .start-btn {
     position: absolute;
-    top: 600px;
+    top: 90%;
     left: 25%;
     width: 50%;
     line-height: 40px;
