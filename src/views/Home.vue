@@ -1,13 +1,14 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-19 17:55:57
+ * @LastEditTime: 2021-01-20 16:39:01
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
     <div class="prevent-wrap" v-show="showPrevent"></div>
     <audio preload src="../assets/music/bgm01.mp3" loop style="display:none" ref="bgmusic"></audio>
     <audio preload src="../assets/music/airplane.mp3" style="display:none" ref="airmusic"></audio>
+    <audio preload src="../assets/music/run.mp3" loop style="display:none" ref="runmusic"></audio>
 
     <img :style="{ width: music ? '40px' : '' }" class="icon-music" :src="music ? require('../assets/icon/music-yes.png') : require('../assets/icon/music-no.png')" alt="" @click="bgMusicChange" />
     <!-- 飞机 -->
@@ -30,8 +31,20 @@
         </div>
       </div>
     </div>
+
+    <!-- 领红包倒计次数弹框 -->
+    <van-popup v-model="showCountTime">
+      <div class="red-packet" v-if="count == 0">
+        <img class="img" src="../../public/adImages/2021011902.png" alt="" />
+        <img src="@/assets/icon/close-2.png" class="icon-close" alt="" @click="showCountTime = false" />
+      </div>
+      <div class="count-wrap" v-if="count < 10 && count > 0">
+        <img class="img-num" :src="require(`../assets/image/count-${count}.png`)" alt="" />
+      </div>
+    </van-popup>
+
     <!-- 详情弹框 -->
-    <van-popup v-model="showDetail">
+    <van-popup v-model="showDetail" :close-on-click-overlay="false">
       <div class="place-detail-wrap popup-wrap">
         <div class="shop-item " v-if="showPlace.shops">
           <img :src="showPlace.shops.banner" alt="" class="img" />
@@ -45,11 +58,11 @@
           </div> -->
         </div>
       </div>
-      <img src="@/assets/icon/close-2.png" class="icon-close" alt="" @click="showDetail = false" />
+      <img src="@/assets/icon/close-2.png" class="icon-close" alt="" @click="closeDetail" />
     </van-popup>
 
     <!-- 地图弹出动画 -->
-    <van-popup v-model="mappup">
+    <van-popup v-model="mappup" :close-on-click-overlay="false">
       <div class="map-pup-wrap">
         <div :class="flag2 ? 'map-pup-bg' : null" @webkitAnimationEnd="mapanimateEnd" @animationEnd="mapanimateEnd"></div>
       </div>
@@ -87,6 +100,9 @@ export default {
   },
   data() {
     return {
+      count: 10, //还剩多少步可领红包
+      showCountTime: false,
+
       mappup: true,
       flag2: false,
 
@@ -122,6 +138,22 @@ export default {
     this.init();
   },
   methods: {
+    //关闭详情弹框
+    closeDetail() {
+      this.showDetail = false;
+      if (this.count <= 0) {
+        return;
+      }
+      this.count--;
+      this.showCountTime = true;
+      if (this.count == 0) {
+        return;
+      }
+      setTimeout(() => {
+        this.showCountTime = false;
+      }, 2000);
+    },
+
     //打开关闭音乐
     bgMusicChange() {
       const bgMusic = this.$refs.bgmusic;
@@ -190,9 +222,12 @@ export default {
       this.showStart = false;
       const bgMusic = this.$refs.bgmusic;
       const airMusic = this.$refs.airmusic;
+      const runMusic = this.$refs.runmusic;
       bgMusic.play();
       airMusic.play();
       airMusic.pause();
+      runMusic.play();
+      runMusic.pause();
 
       airMusic.pause();
       this.showStart = false;
@@ -223,6 +258,7 @@ export default {
       });
     },
 
+    //飞机动画结束
     flyEnd() {
       this.fly = false;
     },
@@ -301,12 +337,6 @@ export default {
 
     /**
      *位置     立正     左脚       右脚
-     *向上走 (0 00%) (33% 00%) (66% 00%)
-     *向下走 (0 32%) (33% 32%) (66% 32%)
-     *向左走 (0 66%) (32% 66%) (66% 66%)  (98% 66%)
-     *向右走 (0 100%) (32% 100%) (66% 100%) (98% 100%)
-
-     *位置     立正     左脚       右脚
      *向下走 (0 00%) (50% 00%) (100% 00%)
      *向左走 (0 33%) (50% 33%) (100% 33%)
      *向右走 (0 66%) (50% 66%) (100% 66%)
@@ -314,6 +344,10 @@ export default {
      */
     //小人移动 先左右 再上下  如果xDiff大于0 则向右  yDiff大于0 则向下
     boyMove(place, boyPosition) {
+      //播放走路音效
+      const runMusic = this.$refs.runmusic;
+      runMusic.play();
+
       const placeLeftNum = place.position.left.split("%")[0]; //地点x轴坐标值
       const placeTopNum = place.position.top.split("%")[0]; //地点y轴坐标值
       const boyLeftNum = boyPosition.left.split("%")[0]; //小人x轴坐标值
@@ -406,6 +440,7 @@ export default {
 
       //动画结束 关闭上下走的定时器
       setTimeout(() => {
+        runMusic.pause(); //关闭走路音效
         clearInterval(UpInterval);
         clearInterval(DownInterval);
         this.showPlaceDetail(place);
@@ -430,6 +465,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.red-packet {
+  width: 80vw;
+  // background-color: #fff;
+
+  .img {
+    width: 100%;
+    display: block;
+  }
+}
+.count-wrap {
+  width: 300px;
+  height: 400px;
+  background-image: url("../assets/image/bg-count.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  .img-num {
+    width: 80px;
+    position: absolute;
+    top: 25px;
+    right: 35px;
+  }
+}
+
 .map-pup-wrap {
   width: 100vw;
   height: 100vh;
