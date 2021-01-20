@@ -582,8 +582,8 @@ export default {
   background-color: #c8290c;
   overflow: hidden;
   background-image: url("~@/assets/image/start.jpg");
-  background-position: top center;
-  background-size: contain;
+  background-position: center;
+  background-size: cover;
   background-repeat: no-repeat;
   position: relative;
   .start-btn {
