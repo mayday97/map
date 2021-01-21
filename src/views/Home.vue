@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-21 14:57:54
+ * @LastEditTime: 2021-01-21 17:24:03
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -76,7 +76,7 @@
     </van-popup>
 
     <!-- 开始弹框 -->
-    <van-popup v-model="showStart" :close-on-click-overlay="false">
+    <van-popup v-model="showStart" :close-on-click-overlay="false" style="width:100%;height:100%">
       <div class="start-wrap">
         <button class="start-btn" @click="handleStart">打开地图</button>
       </div>
@@ -590,18 +590,18 @@ export default {
   background-repeat: no-repeat;
 }
 .start-wrap {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background-color: #c8290c;
   overflow: hidden;
   background-image: url("~@/assets/image/start.jpg");
-  background-position: top center;
-  background-size: contain;
+  background-position: center;
+  background-size: cover;
   background-repeat: no-repeat;
   position: relative;
   .start-btn {
     position: absolute;
-    top: 600px;
+    top: 90%;
     left: 25%;
     width: 50%;
     line-height: 40px;
