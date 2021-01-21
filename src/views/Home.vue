@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-20 16:39:01
+ * @LastEditTime: 2021-01-21 14:57:54
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -18,6 +18,8 @@
 
     <!-- 地图区域 -->
     <div class="map-wrap">
+      <!-- 路线图 -->
+      <div class="map-line"></div>
       <!-- 标题 -->
       <div class="page-title"></div>
       <!-- 地图说明 -->
@@ -103,7 +105,7 @@ export default {
       count: 10, //还剩多少步可领红包
       showCountTime: false,
 
-      mappup: true,
+      mappup: false,
       flag2: false,
 
       showAction: false, //动画
@@ -113,7 +115,7 @@ export default {
       music: true,
       fly: false,
       showPrevent: false, //小人开始移动时的放触摸遮罩
-      showStart: true, //开始弹框
+      showStart: false, //开始弹框
       showDetail: false, //详情弹框
 
       boyStyle: {
@@ -465,6 +467,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.map-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("../assets/image/map-line.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 .red-packet {
   width: 80vw;
   // background-color: #fff;
