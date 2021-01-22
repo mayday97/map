@@ -1,25 +1,37 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-22 15:17:41
+ * @LastEditTime: 2021-01-22 17:12:22
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
-    <div class="prevent-wrap" v-show="showPrevent"></div>
     <audio preload src="../assets/music/bgm01.mp3" loop style="display:none" ref="bgmusic"></audio>
     <audio preload src="../assets/music/airplane.mp3" style="display:none" ref="airmusic"></audio>
     <audio preload src="../assets/music/run.mp3" loop style="display:none" ref="runmusic"></audio>
+    <audio preload src="../assets/music/dice1.mp3" loop style="display:none" ref="dicemusic"></audio>
+    <audio preload src="../assets/music/pup1.mp3" style="display:none" ref="pupmusic"></audio>
 
+    <!-- 防触摸遮罩 -->
+    <div class="prevent-wrap" v-show="showPrevent"></div>
+
+    <!-- 筛子 -->
+    <div class="dice-box" :style="diceStyle" @click="bindDice"></div>
+
+    <!-- 音乐按钮 -->
     <img :style="{ width: music ? '40px' : '' }" class="icon-music" :src="music ? require('../assets/icon/music-yes.png') : require('../assets/icon/music-no.png')" alt="" @click="bgMusicChange" />
+
     <!-- 飞机 -->
     <img class="fly-plane" :class="fly && 'fly'" src="../assets/icon/plane.png" alt="" v-show="fly" @animationEnd="flyEnd" @webkitAnimationEnd="flyEnd" />
+
     <!-- 指南针 -->
     <img class="icon-compass" src="../assets/icon/compass.png" alt="" />
 
     <!-- 地图区域 -->
     <div class="map-wrap">
+      <img src="../assets/icon/start.png" alt="" class="map-line-start" />
+      <img src="../assets/icon/end.png" alt="" class="map-line-end" />
       <!-- 路线图 -->
-      <!-- <div class="map-line"></div> -->
+      <div class="map-line"></div>
       <!-- 标题 -->
       <div class="page-title"></div>
       <!-- 地图说明 -->
@@ -27,40 +39,33 @@
       <!-- 小人 -->
       <div class="icon-boy" ref="boy" :style="boyStyle"></div>
       <!-- 地点 -->
-      <div class="place" v-for="item in placeList" :key="item.name" :style="{ top: item.position.top, left: item.position.left }" @click="bindPlace(item)">
+      <div class="place" v-for="item in placeList" :key="item.name" :style="{ top: item.position.top, left: item.position.left }">
         <div class="place-icon">
           <span class="place-text">{{ item.name }}</span>
         </div>
       </div>
+      <!-- 线路上的盒子 -->
+      <div class="box-point" v-for="item in boxList" :key="item.num" :style="{ top: item.position.top, left: item.position.left }"></div>
     </div>
-
-    <!-- 领红包倒计次数弹框 -->
-    <van-popup v-model="showCountTime">
-      <div class="red-packet" v-if="count == 0">
-        <img class="img" src="../../public/adImages/2021011902.png" alt="" />
-        <img src="@/assets/icon/close-2.png" class="icon-close" alt="" @click="showCountTime = false" />
-      </div>
-      <div class="count-wrap" v-if="count < 10 && count > 0">
-        <img class="img-num" :src="require(`../assets/image/count-${count}.png`)" alt="" />
-      </div>
-    </van-popup>
 
     <!-- 详情弹框 -->
     <van-popup v-model="showDetail" :close-on-click-overlay="false">
       <div class="place-detail-wrap popup-wrap">
         <div class="shop-item " v-if="showPlace.shops">
+          <p class="text">{{ showPlace.intro }}</p>
           <img :src="showPlace.shops.banner" alt="" class="img" />
           <p class="text">{{ showPlace.name }}出品</p>
-          <!-- <div class="img" :style="'background:url(' + showPlace.shops.banner + ')center center / cover no-repeat'"></div> -->
-          <!-- <div style="flex:1">
-            <h2 class="title">{{ showPlace.shops.title }}</h2>
-            <p class="text">{{ showPlace.name }}出品</p>
-            <button class="copy-btn" v-if="showPlace.shops.type == 'taobao'" :data-clipboard-text="showPlace.shops.key" @click="copyTbWord">复制口令</button>
-            <a :href="showPlace.shops.link" class="copy-btn" v-if="showPlace.shops.type == '1688'">立即购买</a>
-          </div> -->
         </div>
       </div>
       <img src="@/assets/icon/close-2.png" class="icon-close" alt="" @click="closeDetail" />
+    </van-popup>
+
+    <!-- 选人物弹框 -->
+    <van-popup v-model="selectChildpup" :close-on-click-overlay="false">
+      <div class="select-child">
+        <div class="child" @click="selectChild('boy')"></div>
+        <div class="child" @click="selectChild('girl')"></div>
+      </div>
     </van-popup>
 
     <!-- 地图弹出动画 -->
@@ -89,7 +94,7 @@ import Clipboard from "clipboard";
 import Jquery from "jquery";
 import mydata from "../../public/data.js";
 const Unit_Time = 100; //单位时间
-const Delay_Time = 500; //切换方向延迟（X轴，Y轴切换）
+const Delay_Time = 200; //切换方向延迟（X轴，Y轴切换）
 const Speed_Time = 200; // 走路速度
 
 import { Popup, Swipe, SwipeItem } from "vant";
@@ -102,10 +107,14 @@ export default {
   },
   data() {
     return {
-      count: 10, //还剩多少步可领红包
-      showCountTime: false,
+      stepCount: 0, //记录当前走到第几步
+      diceStyle: {
+        backgroundPosition: "0% 0%",
+      },
 
-      mappup: true,
+      selectChildpup: false, //选人物弹框
+
+      mappup: false,
       flag2: false,
 
       showAction: false, //动画
@@ -115,45 +124,148 @@ export default {
       music: true,
       fly: false,
       showPrevent: false, //小人开始移动时的放触摸遮罩
-      showStart: true, //开始弹框
+      showStart: false, //开始弹框
       showDetail: false, //详情弹框
 
       boyStyle: {
         width: "64px",
         height: "64px",
-        top: "50%",
-        left: "50%",
+        top: "75.5%",
+        left: "9.6%",
         backgroundPosition: "0% 0%",
         transitionDuration: "0ms",
         transitionProperty: "",
+        backgroundImage: `url(${require("../assets/icon/man-7.png")})`,
       }, //小人属性
       placeList: [], //地点集合
       showPlace: {}, //要展示的地点信息
-      initBoy: null, //初始时小人走路动画定时器
+
+      boxList: [],
     };
   },
   created() {
     this.resourceLoad();
     this.placeList = mydata.list;
+    this.boxList = mydata.listLine;
   },
   mounted() {
     this.init();
   },
   methods: {
+    //摇筛子
+    bindDice() {
+      const diceMusic = this.$refs.dicemusic;
+      diceMusic.play();
+
+      this.showPrevent = true;
+      const num = parseInt(Math.random() * 6) + 1; //生成骰子随机数
+
+      //骰子动画切换
+      let tag = 1;
+      const runInterval = setInterval(() => {
+        if (tag == 1) {
+          this.diceStyle.backgroundPosition = "0% 100%";
+          tag++;
+        } else if (tag == 2) {
+          this.diceStyle.backgroundPosition = "50% 100%";
+          tag++;
+        } else if (tag == 3) {
+          this.diceStyle.backgroundPosition = "100% 100%";
+          tag = 1;
+        }
+      }, 100);
+
+      setTimeout(() => {
+        diceMusic.pause();
+        clearInterval(runInterval);
+        switch (num) {
+          case 1:
+            this.diceStyle.backgroundPosition = "0% 0%";
+            break;
+          case 2:
+            this.diceStyle.backgroundPosition = "50% 0%";
+            break;
+          case 3:
+            this.diceStyle.backgroundPosition = "100% 0%";
+            break;
+          case 4:
+            this.diceStyle.backgroundPosition = "0% 50%";
+            break;
+          case 5:
+            this.diceStyle.backgroundPosition = "50% 50%";
+            break;
+          case 6:
+            this.diceStyle.backgroundPosition = "100% 50%";
+            break;
+          default:
+            this.diceStyle.backgroundPosition = "0% 0%";
+        }
+
+        let temArr = this.boxList.slice(this.stepCount, this.stepCount + num);
+        console.log("起始", temArr);
+
+        let arr2 = temArr.filter((item) => {
+          return item.type === 1;
+        });
+        console.log("拐点", arr2);
+
+        if (arr2.length == 0) {
+          //没有拐点
+          this.runStep([temArr[temArr.length - 1]], 1);
+        } else {
+          //有拐点
+          if (temArr[temArr.length - 1] == arr2[arr2.length - 1]) {
+            this.runStep(arr2, 1);
+          } else {
+            this.runStep([...arr2, temArr[temArr.length - 1]], 1);
+          }
+        }
+
+        this.stepCount = this.stepCount + num;
+        //
+      }, 2000);
+    },
+
+    async runStep(arr, step) {
+      console.log(arr, step, arr.length);
+
+      const boyPosition = this.getBoyPosition(); //小人位置
+      let res = await this.boyMove(arr[step - 1], boyPosition);
+      if (res == "走完" && step < arr.length) {
+        let c = step + 1;
+        console.log("c", c);
+        this.runStep(arr, c);
+      } else {
+        console.log("全程结束", arr[step - 1]);
+        let target = arr[step - 1];
+        if (target.shops) {
+          this.showPlaceDetail(target);
+        }
+        this.showPrevent = false;
+      }
+    },
+
+    //移动到盒子
+    async bindPlace(e, count) {
+      const boyPosition = this.getBoyPosition(); //小人位置
+      let res = await this.boyMove(e, boyPosition);
+      console.log(res, count);
+      return count--;
+    },
+
+    //选择人物
+    selectChild(e) {
+      if (e == "boy") {
+        this.boyStyle.backgroundImage = `url(${require("../assets/icon/man-8.png")})`;
+      } else {
+        this.boyStyle.backgroundImage = `url(${require("../assets/icon/man-7.png")})`;
+      }
+      this.selectChildpup = false;
+    },
+
     //关闭详情弹框
     closeDetail() {
       this.showDetail = false;
-      if (this.count <= 0) {
-        return;
-      }
-      this.count--;
-      this.showCountTime = true;
-      if (this.count == 0) {
-        return;
-      }
-      setTimeout(() => {
-        this.showCountTime = false;
-      }, 2000);
     },
 
     //打开关闭音乐
@@ -175,19 +287,6 @@ export default {
           this.fly = true;
         }, 60000);
       }
-    },
-    //复制口令
-    copyTbWord() {
-      let copy = new Clipboard(".copy-btn");
-      copy.on("success", (e) => {
-        console.log(e);
-        this.$toast("口令复制成功,请在淘宝打开");
-        copy.destroy();
-      });
-      copy.on("error", function(e) {
-        this.$toast("口令复制失败");
-        console.log(e);
-      });
     },
 
     //资源加载
@@ -225,13 +324,18 @@ export default {
       const bgMusic = this.$refs.bgmusic;
       const airMusic = this.$refs.airmusic;
       const runMusic = this.$refs.runmusic;
+      const diceMusic = this.$refs.dicemusic;
+      const pupMusic = this.$refs.pupmusic;
       bgMusic.play();
       airMusic.play();
       airMusic.pause();
       runMusic.play();
       runMusic.pause();
+      diceMusic.play();
+      diceMusic.pause();
+      pupMusic.play();
+      pupMusic.pause();
 
-      airMusic.pause();
       this.showStart = false;
       this.showAction = true;
       setTimeout(() => {
@@ -273,18 +377,8 @@ export default {
       const height = scrollElement.scrollHeight;
       const screenWidth = document.body.clientWidth;
       const screenHeight = document.body.clientHeight;
-      scrollElement.scrollLeft = (width - screenWidth) / 2;
-      scrollElement.scrollTop = (height - screenHeight) / 2;
-      // 小人原地走
-      let tag = 0;
-      this.initBoy = setInterval(() => {
-        if (tag % 2 == 0) {
-          this.boyStyle.backgroundPosition = "50% 0%";
-        } else {
-          this.boyStyle.backgroundPosition = "100% 0%";
-        }
-        tag++;
-      }, Speed_Time);
+      scrollElement.scrollLeft = (width - screenWidth) / 10;
+      scrollElement.scrollTop = height - screenHeight;
     },
 
     //页面横向跟随小人  xtime  小人横向走动时间 pleft 小人要移动到的x轴位置  boyLeft 小人运动前的位置
@@ -346,115 +440,110 @@ export default {
      */
     //小人移动 先左右 再上下  如果xDiff大于0 则向右  yDiff大于0 则向下
     boyMove(place, boyPosition) {
-      //播放走路音效
-      const runMusic = this.$refs.runmusic;
-      runMusic.play();
+      return new Promise((resolve, reject) => {
+        //播放走路音效
 
-      const placeLeftNum = place.position.left.split("%")[0]; //地点x轴坐标值
-      const placeTopNum = place.position.top.split("%")[0]; //地点y轴坐标值
-      const boyLeftNum = boyPosition.left.split("%")[0]; //小人x轴坐标值
-      const boyTopNum = boyPosition.top.split("%")[0]; //小人y轴坐标值
+        const runMusic = this.$refs.runmusic;
+        runMusic.play();
 
-      const xDiff = placeLeftNum - boyLeftNum; //横向差值
-      const yDiff = placeTopNum - boyTopNum; //纵向差值
+        const placeLeftNum = place.position.left.split("%")[0]; //地点x轴坐标值
+        const placeTopNum = place.position.top.split("%")[0]; //地点y轴坐标值
+        const boyLeftNum = boyPosition.left.split("%")[0]; //小人x轴坐标值
+        const boyTopNum = boyPosition.top.split("%")[0]; //小人y轴坐标值
 
-      const xTime = Math.abs(xDiff) * Unit_Time; //x轴移动时间
-      const yTime = Math.abs(yDiff) * Unit_Time; //y轴移动时间
+        const xDiff = placeLeftNum - boyLeftNum; //横向差值
+        const yDiff = placeTopNum - boyTopNum; //纵向差值
 
-      let UpInterval, DownInterval, RightInterval, LeftInterval;
+        const xTime = Math.abs(xDiff) * Unit_Time; //x轴移动时间
+        const yTime = Math.abs(yDiff) * Unit_Time; //y轴移动时间
 
-      //=======================================================================
-      this.showPrevent = true; //打开防止小人运动时用户触摸的遮罩
-      //x轴移动
-      if (xDiff >= 0) {
-        // //向右
-        this.boyStyle.backgroundPosition = "0% 66%";
-        let tag = 0;
-        RightInterval = setInterval(() => {
-          if (tag % 2 == 0) {
-            this.boyStyle.backgroundPosition = "50% 66%";
-          } else {
-            this.boyStyle.backgroundPosition = "100% 66%";
-          }
-          tag++;
-        }, Speed_Time);
-      } else {
-        // //向左
-        this.boyStyle.backgroundPosition = "0% 33%";
-        let tag = 0;
-        RightInterval = setInterval(() => {
-          if (tag % 2 == 0) {
-            this.boyStyle.backgroundPosition = "50% 33%";
-          } else {
-            this.boyStyle.backgroundPosition = "100% 33%";
-          }
-          tag++;
-        }, Speed_Time);
-      }
+        let UpInterval, DownInterval, RightInterval, LeftInterval;
 
-      setTimeout(() => {
-        this.boyStyle.left = place.position.left;
-        this.boyStyle.transitionProperty = "left";
-        this.boyStyle.transitionDuration = xTime + "ms";
-        this.movePage(xTime, place.position.left, boyPosition.left, boyPosition.top);
-      }, Delay_Time);
-      //=======================================================================
-
-      //=======================================================================
-      //y轴移动
-      setTimeout(() => {
-        clearInterval(LeftInterval);
-        clearInterval(RightInterval);
-        if (yDiff >= 0) {
-          // //向下
-          this.boyStyle.backgroundPosition = "0% 0%";
+        //=======================================================================
+        //x轴移动
+        if (xDiff > 0) {
+          // //向右
+          this.boyStyle.backgroundPosition = "0% 66%";
           let tag = 0;
-          DownInterval = setInterval(() => {
+          RightInterval = setInterval(() => {
             if (tag % 2 == 0) {
-              this.boyStyle.backgroundPosition = "50% 0%";
+              this.boyStyle.backgroundPosition = "50% 66%";
             } else {
-              this.boyStyle.backgroundPosition = "100% 0%";
+              this.boyStyle.backgroundPosition = "100% 66%";
             }
             tag++;
           }, Speed_Time);
-        } else {
-          // //向上
-          this.boyStyle.backgroundPosition = "0% 100%";
+        } else if (xDiff < 0) {
+          // //向左
+          this.boyStyle.backgroundPosition = "0% 33%";
           let tag = 0;
-          UpInterval = setInterval(() => {
+          RightInterval = setInterval(() => {
             if (tag % 2 == 0) {
-              this.boyStyle.backgroundPosition = "50% 100%";
+              this.boyStyle.backgroundPosition = "50% 33%";
             } else {
-              this.boyStyle.backgroundPosition = "100% 100%";
+              this.boyStyle.backgroundPosition = "100% 33%";
             }
             tag++;
           }, Speed_Time);
         }
 
         setTimeout(() => {
-          this.boyStyle.top = place.position.top;
-          this.boyStyle.transitionProperty = "top";
-          this.boyStyle.transitionDuration = yTime + "ms";
-          this.movePageVertical(yTime, place.position.top, boyPosition.top);
+          this.boyStyle.left = place.position.left;
+          this.boyStyle.transitionProperty = "left";
+          this.boyStyle.transitionDuration = xTime + "ms";
+          this.movePage(xTime, place.position.left, boyPosition.left, boyPosition.top);
         }, Delay_Time);
-      }, xTime + Delay_Time);
-      //=======================================================================
+        //=======================================================================
 
-      //动画结束 关闭上下走的定时器
-      setTimeout(() => {
-        runMusic.pause(); //关闭走路音效
-        clearInterval(UpInterval);
-        clearInterval(DownInterval);
-        this.showPlaceDetail(place);
-        this.showPrevent = false; //关闭防止小人运动时用户触摸的遮罩
-      }, xTime + yTime + Delay_Time * 2);
-    },
+        //=======================================================================
+        //y轴移动
+        setTimeout(() => {
+          clearInterval(LeftInterval);
+          clearInterval(RightInterval);
+          if (yDiff > 0) {
+            //向下
+            this.boyStyle.backgroundPosition = "0% 0%";
+            let tag = 0;
+            DownInterval = setInterval(() => {
+              if (tag % 2 == 0) {
+                this.boyStyle.backgroundPosition = "50% 0%";
+              } else {
+                this.boyStyle.backgroundPosition = "100% 0%";
+              }
+              tag++;
+            }, Speed_Time);
+          } else if (yDiff < 0) {
+            //向上
+            this.boyStyle.backgroundPosition = "0% 100%";
+            let tag = 0;
+            UpInterval = setInterval(() => {
+              if (tag % 2 == 0) {
+                this.boyStyle.backgroundPosition = "50% 100%";
+              } else {
+                this.boyStyle.backgroundPosition = "100% 100%";
+              }
+              tag++;
+            }, Speed_Time);
+          }
 
-    //点击地点
-    bindPlace(e) {
-      clearInterval(this.initBoy);
-      const boyPosition = this.getBoyPosition(); //小人位置
-      this.boyMove(e, boyPosition);
+          setTimeout(() => {
+            this.boyStyle.top = place.position.top;
+            this.boyStyle.transitionProperty = "top";
+            this.boyStyle.transitionDuration = yTime + "ms";
+            this.movePageVertical(yTime, place.position.top, boyPosition.top);
+          }, Delay_Time);
+        }, xTime + Delay_Time);
+        //=======================================================================
+
+        //动画结束 关闭上下走的定时器
+        setTimeout(() => {
+          runMusic.pause(); //关闭走路音效
+          clearInterval(UpInterval);
+          clearInterval(DownInterval);
+          resolve("走完");
+          // this.showPlaceDetail(place);
+        }, xTime + yTime + Delay_Time * 2);
+      });
     },
 
     //显示地点详情
@@ -467,6 +556,57 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.map-line-start {
+  position: absolute;
+  top: 73.7%;
+  left: 10.5%;
+  width: 50px;
+}
+.map-line-end {
+  position: absolute;
+  top: 56%;
+  left: 73.3%;
+  width: 50px;
+}
+.prevent-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 1000;
+}
+.dice-box {
+  position: fixed;
+  left: 50%;
+  bottom: 50px;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 70px;
+  background-image: url("../assets/image/dice.png");
+  z-index: 999;
+}
+.select-child {
+  width: 260.8px;
+  height: 327.2px;
+  background-image: url("../assets/image/select-child.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  display: flex;
+  .child {
+    width: 50%;
+    height: 100%;
+  }
+}
+
+.box-point {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+}
+
 .map-line {
   position: absolute;
   top: 0;
@@ -476,30 +616,6 @@ export default {
   background-image: url("../assets/image/map-line.png");
   background-size: cover;
   background-repeat: no-repeat;
-}
-
-.red-packet {
-  width: 80vw;
-  // background-color: #fff;
-
-  .img {
-    width: 100%;
-    display: block;
-  }
-}
-.count-wrap {
-  width: 300px;
-  height: 400px;
-  background-image: url("../assets/image/bg-count.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  position: relative;
-  .img-num {
-    width: 80px;
-    position: absolute;
-    top: 25px;
-    right: 35px;
-  }
 }
 
 .map-pup-wrap {
@@ -569,15 +685,7 @@ export default {
   left: 20px;
   z-index: 11;
 }
-.prevent-wrap {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0);
-  z-index: 50;
-}
+
 //弹框
 /deep/ .van-popup {
   background-color: rgba(0, 0, 0, 0);
@@ -632,19 +740,6 @@ export default {
       font-size: 12px;
       text-align: center;
       padding-bottom: 5px;
-    }
-    .copy-btn {
-      margin: 0 auto;
-      display: block;
-      width: 80px;
-      height: 34px;
-      line-height: 34px;
-      background-color: #ce6738;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      font-size: 12px;
-      text-align: center;
     }
   }
 }
@@ -726,9 +821,7 @@ export default {
 
 // 小人
 .icon-boy {
-  // width: 64px; /* no */
-  // height: 64px; /* no */
-  background-image: url("~@/assets/icon/man-7.png");
+  //   background-image: url("~@/assets/icon/man-7.png");
   background-repeat: no-repeat;
   position: absolute;
   top: 50%;

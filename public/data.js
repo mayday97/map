@@ -1,7 +1,7 @@
 /*
  * @Author: xiaoyu
  * @Date: 2020-12-25 10:05:17
- * @LastEditTime: 2021-01-19 17:58:44
+ * @LastEditTime: 2021-01-22 17:18:14
  */
 export default {
   list: [
@@ -11,15 +11,13 @@ export default {
         top: "71%",
         left: "29.5%",
       }, //所在地图上位置
-      shops: [
-        {
-          title: "草莓", //商品名
-          banner: "", //商品图片
-          key: "", //淘宝口令
-          link: "", //1688链接
-          type: "", //类型，‘taobao’,'1688'
-        },
-      ],
+      shops: {
+        title: "草莓", //商品名
+        banner: "", //商品图片
+        key: "", //淘宝口令
+        link: "", //1688链接
+        type: "", //类型，‘taobao’,'1688'
+      },
     },
     {
       name: "杭州仲三农业发展有限公司",
@@ -169,7 +167,7 @@ export default {
       },
       shops: {
         title: "松子",
-        banner: "./adImages/2021011902.png",
+        banner: "./adImages/2021011902.jpg",
         key: "",
         link: "https://detail.1688.com/offer/35895595698.html?spm=a2615.12330364.autotrace-offerGeneral.13.61f07bf8lZ7k39&scm=1007.19342.105834.0",
         type: "1688",
@@ -369,6 +367,692 @@ export default {
         key: "2.0 b:// amfXctuH1dM《达k@itἍo宝【阿婆家薯片大包零食小吃礼包小包装休闲食品晚上解饿年货超大整箱】",
         link: "",
         type: "taobao",
+      },
+    },
+  ],
+  listLine: [
+    {
+      num: 1,
+      type: 0,
+      position: {
+        top: "75.5%",
+        left: "14%",
+      },
+      name: "杭州徐同泰食品有限公司",
+      shops: {
+        title: "酱油",
+        banner: "./adImages/2021011910.png",
+        intro: "粮食酿造，鲜美醇香，火锅好搭档",
+      },
+    },
+    {
+      num: 2,
+      type: 0,
+      position: {
+        top: "75.5%",
+        left: "16.4%",
+      },
+    },
+    {
+      num: 3,
+      type: 1,
+      position: {
+        top: "75.5%",
+        left: "18.8%",
+      },
+    },
+    {
+      num: 4,
+      type: 0,
+      position: {
+        top: "69.7%",
+        left: "18.8%",
+      },
+      name: "楼塔仙岩山铁皮石斛",
+      shops: {
+        title: "石斛花",
+        banner: "./adImages/2021011909.png",
+        intro: "每天一杯柔和滋润的石斛花茶，让肌肤保持水润，还能安神助眠。",
+      },
+    },
+    {
+      num: 5,
+      type: 0,
+      position: {
+        top: "63.9%",
+        left: "18.8%",
+      },
+      name: "杭州萧山云门寺生态茶场",
+      shops: {
+        title: "绿茶",
+        banner: "./adImages/2021011911.png",
+        intro: "高山茶，茶汤香气醉人，浓醇干爽",
+      },
+    },
+    {
+      num: 6,
+      type: 1,
+      position: {
+        top: "58.1%",
+        left: "18.8%",
+      },
+      name: "杭州阿咔农业开发有限公司",
+      shops: {
+        title: "草莓",
+        banner: "",
+        intro: "鲜嫩多汁，入口即化，隔屏都能闻到那一股甜丝丝的香味，让人垂涎欲滴",
+      },
+    },
+    {
+      num: 7,
+      type: 0,
+      position: {
+        top: "58.1%",
+        left: "21.2%",
+      },
+    },
+    {
+      num: 8,
+      type: 0,
+      position: {
+        top: "58.1%",
+        left: "23.6%",
+      },
+    },
+    {
+      num: 9,
+      type: 1,
+      position: {
+        top: "58.1%",
+        left: "26%",
+      },
+    },
+    {
+      num: 10,
+      type: 0,
+      position: {
+        top: "63.9%",
+        left: "26%",
+      },
+    },
+    {
+      num: 11,
+      type: 0,
+      position: {
+        top: "69.7%",
+        left: "26%",
+      },
+    },
+    {
+      num: 12,
+      type: 0,
+      position: {
+        top: "75.5%",
+        left: "26%",
+      },
+    },
+    {
+      num: 13,
+      type: 1,
+      position: {
+        top: "81.3%",
+        left: "26%",
+      },
+    },
+    {
+      num: 14,
+      type: 0,
+      position: {
+        top: "81.3%",
+        left: "28.4%",
+      },
+      name: "杭州金迈田种养殖有限公司",
+      shops: {
+        title: "春香柑橘",
+        banner: "",
+        intro: "甜入人心品不够，甜言蜜语道不完",
+      },
+    },
+    {
+      num: 15,
+      type: 1,
+      position: {
+        top: "81.3%",
+        left: "30.8%",
+      },
+    },
+    {
+      num: 16,
+      type: 0,
+      position: {
+        top: "75.5%",
+        left: "30.8%",
+      },
+      name: "杭州金峰茶叶专业合作社",
+      shops: {
+        title: "草莓",
+        banner: "",
+        intro: "莓的味道，又好吃的，又怀念的",
+      },
+    },
+    {
+      num: 17,
+      type: 0,
+      position: {
+        top: "69.7%",
+        left: "30.8%",
+      },
+    },
+    {
+      num: 18,
+      type: 1,
+      position: {
+        top: "63.9%",
+        left: "30.8%",
+      },
+    },
+    {
+      num: 19,
+      type: 0,
+      position: {
+        top: "63.9%",
+        left: "33.2%",
+      },
+    },
+    {
+      num: 20,
+      type: 1,
+      position: {
+        top: "63.9%",
+        left: "35.6%",
+      },
+    },
+    {
+      num: 21,
+      type: 0,
+      position: {
+        top: "58.1%",
+        left: "35.6%",
+      },
+      name: "杭州巨佳茶业有限公司",
+      shops: {
+        title: "巨佳龙井茶",
+        banner: "./adImages/2021011914.png",
+        intro: "",
+      },
+    },
+    {
+      num: 22,
+      type: 1,
+      position: {
+        top: "52.3%",
+        left: "35.6%",
+      },
+      name: "杭州膳礼坊网络科技有限公司",
+      shops: {
+        title: "炒货",
+        banner: "",
+        intro: "",
+      },
+    },
+    {
+      num: 23,
+      type: 0,
+      position: {
+        top: "52.3%",
+        left: "33.2%",
+      },
+    },
+    {
+      num: 24,
+      type: 1,
+      position: {
+        top: "52.3%",
+        left: "30.8%",
+      },
+      name: "杭州百晨食品有限公司",
+      shops: {
+        title: "琥珀核桃仁",
+        banner: "./adImages/2021011918.png",
+        intro: "",
+      },
+    },
+    {
+      num: 25,
+      type: 0,
+      position: {
+        top: "46.5%",
+        left: "30.8%",
+      },
+      name: "杭州小龙食品有限公司",
+      shops: {
+        title: "松子",
+        banner: "./adImages/2021011902.jpg",
+        intro: "颗粒饱满，原味松香，好原料制作好坚果",
+      },
+    },
+    {
+      num: 26,
+      type: 1,
+      position: {
+        top: "40.7%",
+        left: "30.8%",
+      },
+    },
+    {
+      num: 27,
+      type: 0,
+      position: {
+        top: "40.7%",
+        left: "33.2%",
+      },
+    },
+    {
+      num: 28,
+      type: 0,
+      position: {
+        top: "40.7%",
+        left: "35.6%",
+      },
+    },
+    {
+      num: 29,
+      type: 1,
+      position: {
+        top: "40.7%",
+        left: "38%",
+      },
+      name: "杭州舒禾农产品有限公司",
+      shops: {
+        title: "蔬菜礼盒",
+        banner: "./adImages/2021011901.png",
+        intro: "住在蚊帐里的新鲜蔬菜，虫子爬不进去，安全又美味",
+      },
+    },
+    {
+      num: 30,
+      type: 0,
+      position: {
+        top: "34.9%",
+        left: "38%",
+      },
+    },
+    {
+      num: 31,
+      type: 0,
+      position: {
+        top: "29.1%",
+        left: "38%",
+      },
+    },
+    {
+      num: 32,
+      type: 1,
+      position: {
+        top: "23.3%",
+        left: "38%",
+      },
+      name: "杭州翠沁斋食品股份有限公司",
+      shops: {
+        title: "黑芝麻糕点",
+        banner: "./adImages/2021011915.png",
+        intro: "",
+      },
+    },
+    {
+      num: 33,
+      type: 0,
+      position: {
+        top: "23.3%",
+        left: "40.4%",
+      },
+      name: "杭州睿腾电子商务有限公司",
+      shops: {
+        title: "烤肠",
+        banner: "./adImages/2021011920.png",
+        intro: "",
+      },
+    },
+    {
+      num: 34,
+      type: 0,
+      position: {
+        top: "23.3%",
+        left: "42.8%",
+      },
+    },
+    {
+      num: 35,
+      type: 1,
+      position: {
+        top: "23.3%",
+        left: "45.2%",
+      },
+    },
+    {
+      num: 36,
+      type: 0,
+      position: {
+        top: "29.1%",
+        left: "45.2%",
+      },
+      name: "杭州百乡缘农业开发有限公司",
+      shops: {
+        title: "鸭",
+        banner: "./adImages/2021011919.png",
+        intro: "",
+      },
+    },
+    {
+      num: 37,
+      type: 0,
+      position: {
+        top: "34.9%",
+        left: "45.2%",
+      },
+    },
+    {
+      num: 38,
+      type: 1,
+      position: {
+        top: "40.7%",
+        left: "45.2%",
+      },
+      name: "杭州森宝食品有限公司",
+      shops: {
+        title: "腰果",
+        banner: "./adImages/2021011903.png",
+        intro: "",
+      },
+    },
+    {
+      num: 39,
+      type: 0,
+      position: {
+        top: "40.7%",
+        left: "47.6%",
+      },
+    },
+    {
+      num: 40,
+      type: 0,
+      position: {
+        top: "40.7%",
+        left: "50%",
+      },
+    },
+    {
+      num: 41,
+      type: 0,
+      position: {
+        top: "40.7%",
+        left: "52.4%",
+      },
+    },
+    {
+      num: 42,
+      type: 1,
+      position: {
+        top: "40.7%",
+        left: "54.8%",
+      },
+    },
+    {
+      num: 43,
+      type: 1,
+      position: {
+        top: "46.5%",
+        left: "54.8%",
+      },
+      name: "杭州仲三农业发展有限公司",
+      shops: {
+        title: "酱鸭",
+        banner: "./adImages/2021011921.png",
+        intro: "",
+      },
+    },
+    {
+      num: 44,
+      type: 0,
+      position: {
+        top: "46.5%",
+        left: "57.2%",
+      },
+    },
+    {
+      num: 45,
+      type: 1,
+      position: {
+        top: "46.5%",
+        left: "59.6%",
+      },
+      name: "杭州德兴蜂业有限公司",
+      shops: {
+        title: "柑橘蜂蜜",
+        banner: "./adImages/2021011907.png",
+        intro: "",
+      },
+    },
+    {
+      num: 46,
+      type: 1,
+      position: {
+        top: "52.3%",
+        left: "59.6%",
+      },
+    },
+    {
+      num: 47,
+      type: 0,
+      position: {
+        top: "52.3%",
+        left: "62%",
+      },
+      name: "杭州党山酱萃食品有限公司",
+      shops: {
+        title: "萝卜干",
+        banner: "./adImages/2021011923.png",
+        intro: "",
+      },
+    },
+    {
+      num: 48,
+      type: 0,
+      position: {
+        top: "52.3%",
+        left: "64.4%",
+      },
+    },
+    {
+      num: 49,
+      type: 1,
+      position: {
+        top: "52.3%",
+        left: "66.8%",
+      },
+    },
+    {
+      num: 50,
+      type: 0,
+      position: {
+        top: "46.5%",
+        left: "66.8%",
+      },
+      name: "杭州熠苗贸易有限公司",
+      shops: {
+        title: "萝卜条",
+        banner: "./adImages/2021011904.png",
+        intro: "",
+      },
+    },
+    {
+      num: 51,
+      type: 0,
+      position: {
+        top: "40.7%",
+        left: "66.8%",
+      },
+      name: "杭州麦爽食品有限公司",
+      shops: {
+        title: "薯片",
+        banner: "./adImages/2021011926.png",
+        intro: "",
+      },
+    },
+    {
+      num: 52,
+      type: 1,
+      position: {
+        top: "34.9%",
+        left: "66.8%",
+      },
+    },
+    {
+      num: 53,
+      type: 0,
+      position: {
+        top: "34.9%",
+        left: "64.4%",
+      },
+      name: "杭州西厨贝可电子商务有限公司",
+      shops: {
+        title: "葡式蛋挞皮",
+        banner: "./adImages/2021011908.png",
+        intro: "",
+      },
+    },
+    {
+      num: 54,
+      type: 1,
+      position: {
+        top: "34.9%",
+        left: "62%",
+      },
+    },
+    {
+      num: 55,
+      type: 0,
+      position: {
+        top: "29.1%",
+        left: "62%",
+      },
+      name: "杭州张瑜食品有限公司",
+      shops: {
+        title: "外婆家醉鱼干",
+        banner: "./adImages/2021011905.png",
+        intro: "",
+      },
+    },
+    {
+      num: 56,
+      type: 1,
+      position: {
+        top: "23.3%",
+        left: "62%",
+      },
+    },
+    {
+      num: 57,
+      type: 0,
+      position: {
+        top: "23.3%",
+        left: "64.4%",
+      },
+    },
+    {
+      num: 58,
+      type: 0,
+      position: {
+        top: "23.3%",
+        left: "66.8%",
+      },
+    },
+    {
+      num: 59,
+      type: 0,
+      position: {
+        top: "23.3%",
+        left: "69.2%",
+      },
+    },
+    {
+      num: 60,
+      type: 0,
+      position: {
+        top: "23.3%",
+        left: "71.6%",
+      },
+    },
+    {
+      num: 61,
+      type: 1,
+      position: {
+        top: "23.3%",
+        left: "74%",
+      },
+    },
+    {
+      num: 62,
+      type: 0,
+      position: {
+        top: "29.1%",
+        left: "74%",
+      },
+      name: "龚老汉控股集团有限公司",
+      shops: {
+        title: "有机甲鱼",
+        banner: "./adImages/2021011906.png",
+        intro: "",
+      },
+    },
+    {
+      num: 63,
+      type: 0,
+      position: {
+        top: "34.9%",
+        left: "74%",
+      },
+      name: "杭州亿舟农业发展有限公司",
+      shops: {
+        title: "农产品",
+        banner: "",
+        intro: "",
+      },
+    },
+    {
+      num: 64,
+      type: 0,
+      position: {
+        top: "40.7%",
+        left: "74%",
+      },
+    },
+    {
+      num: 65,
+      type: 0,
+      position: {
+        top: "46.5%",
+        left: "74%",
+      },
+      name: "杭州陈源昌食品有限公司",
+      shops: {
+        title: "巴西松子",
+        banner: "./adImages/2021011924.png",
+        intro: "",
+      },
+    },
+    {
+      num: 66,
+      type: 0,
+      position: {
+        top: "52.3%",
+        left: "74%",
+      },
+      name: "杭州传农梅干菜专业合作社",
+      shops: {
+        title: "梅干菜",
+        banner: "./adImages/2021011925.png",
+        intro: "",
       },
     },
   ],

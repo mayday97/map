@@ -1,7 +1,7 @@
 /*
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2020-12-29 13:08:57
+ * @LastEditTime: 2021-01-22 15:13:41
  */
 import Vue from "vue";
 import VueRouter from "vue-router";
@@ -13,6 +13,11 @@ const routes = [
     path: "/",
     name: "Home",
     component: () => import("../views/Home.vue"),
+  },
+  {
+    path: "/test",
+    name: "Home2",
+    component: () => import("../views/Home2.vue"),
   },
 ];
 
