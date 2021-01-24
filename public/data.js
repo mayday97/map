@@ -27,7 +27,7 @@ export default {
       },
       shops: {
         title: "酱鸭",
-        banner: "./adImages/2021011921.png",
+        banner: "./adImages/2021011921.jpg",
         key: "7 b:// ✔hG0YctHnxN1达開tἍo宝【仲三腊鸭杭州本地特色无爪酱鸭 酱油鸭 农家腊味手工酱板鸭一只】",
         link: "",
         type: "taobao",
@@ -41,7 +41,7 @@ export default {
       },
       shops: {
         title: "巨佳龙井茶",
-        banner: "./adImages/2021011914.png",
+        banner: "./adImages/2021011914.jpg",
         key: "",
         link: "https://qr.1688.com/share.html?secret=Owwa2d99",
         type: "1688",
@@ -55,7 +55,7 @@ export default {
       },
       shops: {
         title: "烤肠",
-        banner: "./adImages/2021011920.png",
+        banner: "./adImages/2021011920.jpg",
         key: "8.0 b:// 🗝Te11cttvYOq₰达k@itaӦ宝【肉司令脆皮烤肠500g火山石烤肠热狗冷冻食品地道烤香肠】",
         link: "",
         type: "taobao",
@@ -69,7 +69,7 @@ export default {
       },
       shops: {
         title: "萝卜干",
-        banner: "./adImages/2021011923.png",
+        banner: "./adImages/2021011923.jpg",
         key: "8.0 b:// zTvMcttDeUD😺达開淘bἀo【党山150g*3风脱水蜂蜜汁萧山萝卜干零食特产干萝卜干下饭菜酱菜】",
         link: "",
         type: "taobao",
@@ -83,7 +83,7 @@ export default {
       },
       shops: {
         title: "绿茶",
-        banner: "./adImages/2021011911.png",
+        banner: "./adImages/2021011911.jpg",
         key: "8 b:// 🔐6MnKctGZLgN€达k@itaӪ宝【云石三清龙井 2020雨前新茶叶 绿茶 125g绿色铁罐】",
         link: "",
         type: "taobao",
@@ -97,7 +97,7 @@ export default {
       },
       shops: {
         title: "葡式蛋挞皮",
-        banner: "./adImages/2021011908.png",
+        banner: "./adImages/2021011908.jpg",
         key: "4.0 b:// lNYOctG2KH5£达開tἍo宝【西厨贝可葡式蛋挞皮36个挞液套装KFC牛油大号烘焙原料家用半成品】",
         link: "",
         type: "taobao",
@@ -106,12 +106,13 @@ export default {
     {
       name: "楼塔仙岩山铁皮石斛",
       position: {
-        top: "69%",
-        left: "17%",
+        top: "73%",
+        left: "13%",
       },
+
       shops: {
         title: "石斛花",
-        banner: "./adImages/2021011909.png",
+        banner: "./adImages/2021011909.jpg",
         key: "",
         link: "",
         type: "",
@@ -120,12 +121,12 @@ export default {
     {
       name: "杭州张瑜食品有限公司",
       position: {
-        top: "31%",
-        left: "60%",
+        top: "27%",
+        left: "65%",
       },
       shops: {
         title: "外婆家醉鱼干",
-        banner: "./adImages/2021011905.png",
+        banner: "./adImages/2021011905.jpg",
         key: "1 b:// ✔OqqectG46qA₤达開taӪ宝【外婆家醉鱼干478克包装小包浙江绍兴特产即食冷盘休闲食零食】",
         link: "",
         type: "taobao",
@@ -153,7 +154,7 @@ export default {
       },
       shops: {
         title: "有机甲鱼",
-        banner: "./adImages/2021011906.png",
+        banner: "./adImages/2021011906.jpg",
         key: "9 b:// VoxEctGgw7F《哒楷淘bἀo【龚老汉中华鳖甲鱼无公害活体鳖 王八 团鱼生态散养1000g水鱼黄牌】",
         link: "",
         type: "taobao",
@@ -181,7 +182,7 @@ export default {
       },
       shops: {
         title: "腰果",
-        banner: "./adImages/2021011903.png",
+        banner: "./adImages/2021011903.jpg",
         key: "5.0 b:// 🗝9qgrctG8nJG达k@itaӪ宝【森宝炭烧腰果仁500g小包装咸蛋黄味炭烧藤椒牛肉味称重零食坚果】",
         link: "",
         type: "taobao",
@@ -195,7 +196,7 @@ export default {
       },
       shops: {
         title: "萝卜条",
-        banner: "./adImages/2021011904.png",
+        banner: "./adImages/2021011904.jpg",
         key: "5 b:// rWnYctGPOmt达k@itaӦ宝【【两包包邮】大根寿司酸萝卜条韩国寿司套装工具料理材料萝卜400g】",
         link: "",
         type: "taobao",
@@ -209,7 +210,7 @@ export default {
       },
       shops: {
         title: "柑橘蜂蜜",
-        banner: "./adImages/2021011907.png",
+        banner: "./adImages/2021011907.jpg",
         key: "5.0 b:// DwlwctGmOAX₴哒楷淘bἀo【真爱之蜜 柑橘蜂蜜礼盒装送礼精品】",
         link: "",
         type: "taobao",
@@ -218,12 +219,12 @@ export default {
     {
       name: "杭州徐同泰食品有限公司",
       position: {
-        top: "73%",
-        left: "13%",
+        top: "69%",
+        left: "17%",
       },
       shops: {
         title: "酱油",
-        banner: "./adImages/2021011910.png",
+        banner: "./adImages/2021011910.jpg",
         key: "7 b:// 😺u6rIctGMhmS₤哒楷taӦ宝【澳门豆捞酱油寿司酱油200ml】",
         link: "",
         type: "taobao",
@@ -232,8 +233,8 @@ export default {
     {
       name: "杭州阿咔农业开发有限公司",
       position: {
-        top: "52%",
-        left: "19%",
+        top: "53%",
+        left: "26%",
       },
       shops: {
         title: "蓝莓",
@@ -251,7 +252,7 @@ export default {
       },
       shops: {
         title: "黑芝麻糕点",
-        banner: "./adImages/2021011915.png",
+        banner: "./adImages/2021011915.jpg",
         key: "5 b:// 5SB5ctGI08k哒楷taӪ宝【翠沁斋杭州特产黑芝麻糕传统手工糕點心散装老年人麻酥糕零食360g】",
         link: "",
         type: "taobao",
@@ -293,7 +294,7 @@ export default {
       },
       shops: {
         title: "琥珀核桃仁",
-        banner: "./adImages/2021011918.png",
+        banner: "./adImages/2021011918.jpg",
         key: "0.0 b:// 🔐ZvUcctGyYYG🗝达k@i淘bἀo【采坚果的松鼠-琥珀核桃仁散装500g核桃肉熟休闲孕妇坚果小零食】",
         link: "",
         type: "taobao",
@@ -307,7 +308,7 @@ export default {
       },
       shops: {
         title: "鸭",
-        banner: "./adImages/2021011919.png",
+        banner: "./adImages/2021011919.jpg",
         key: "",
         link: "",
         type: "",
@@ -335,7 +336,7 @@ export default {
       },
       shops: {
         title: "巴西松子",
-        banner: "./adImages/2021011924.png",
+        banner: "./adImages/2021011924.jpg",
         key: "",
         link: "https://detail.1688.com/offer/574015570992.html?spm=a360g.10049609.0.0.4e21410ct7zF1f",
         type: "1688",
@@ -349,7 +350,7 @@ export default {
       },
       shops: {
         title: "梅干菜",
-        banner: "./adImages/2021011925.png",
+        banner: "./adImages/2021011925.jpg",
         key: "",
         link: "",
         type: "",
@@ -358,13 +359,27 @@ export default {
     {
       name: "杭州麦爽食品有限公司",
       position: {
-        top: "40%",
+        top: "36%",
         left: "68%",
       },
       shops: {
         title: "薯片",
-        banner: "./adImages/2021011926.png",
+        banner: "./adImages/2021011926.jpg",
         key: "2.0 b:// amfXctuH1dM《达k@itἍo宝【阿婆家薯片大包零食小吃礼包小包装休闲食品晚上解饿年货超大整箱】",
+        link: "",
+        type: "taobao",
+      },
+    },
+    {
+      name: "杭州辽大食品有限公司",
+      position: {
+        top: "67.1%",
+        left: "24%",
+      },
+      shops: {
+        title: "青梅片",
+        banner: "./adImages/2021011927.jpg",
+        key: "",
         link: "",
         type: "taobao",
       },
@@ -378,11 +393,11 @@ export default {
         top: "75.5%",
         left: "14%",
       },
-      name: "杭州徐同泰食品有限公司",
+      name: "楼塔仙岩山铁皮石斛",
       shops: {
-        title: "酱油",
-        banner: "./adImages/2021011910.png",
-        intro: "粮食酿造，鲜美醇香，火锅好搭档",
+        title: "石斛干花",
+        banner: "./adImages/2021011909.jpg",
+        intro: "每天一杯柔和滋润的石斛花茶，让肌肤保持水润，还能安神助眠。",
       },
     },
     {
@@ -408,11 +423,12 @@ export default {
         top: "69.7%",
         left: "18.8%",
       },
-      name: "楼塔仙岩山铁皮石斛",
+
+      name: "杭州徐同泰食品有限公司",
       shops: {
-        title: "石斛花",
-        banner: "./adImages/2021011909.png",
-        intro: "每天一杯柔和滋润的石斛花茶，让肌肤保持水润，还能安神助眠。",
+        title: "酱油",
+        banner: "./adImages/2021011910.jpg",
+        intro: "粮食酿造，鲜美醇香，火锅好搭档",
       },
     },
     {
@@ -422,12 +438,6 @@ export default {
         top: "63.9%",
         left: "18.8%",
       },
-      name: "杭州萧山云门寺生态茶场",
-      shops: {
-        title: "绿茶",
-        banner: "./adImages/2021011911.png",
-        intro: "高山茶，茶汤香气醉人，浓醇干爽",
-      },
     },
     {
       num: 6,
@@ -436,11 +446,11 @@ export default {
         top: "58.1%",
         left: "18.8%",
       },
-      name: "杭州阿咔农业开发有限公司",
+      name: "杭州萧山云门寺生态茶场",
       shops: {
-        title: "草莓",
-        banner: "",
-        intro: "鲜嫩多汁，入口即化，隔屏都能闻到那一股甜丝丝的香味，让人垂涎欲滴",
+        title: "绿茶",
+        banner: "./adImages/2021011911.jpg",
+        intro: "高山茶，茶汤香气醉人，浓醇干爽",
       },
     },
     {
@@ -466,6 +476,12 @@ export default {
         top: "58.1%",
         left: "26%",
       },
+      name: "杭州阿咔农业开发有限公司",
+      shops: {
+        title: "草莓",
+        banner: "./adImages/2021011912.jpg",
+        intro: "鲜嫩多汁，入口即化，隔屏都能闻到那一股甜丝丝的香味，让人垂涎欲滴",
+      },
     },
     {
       num: 10,
@@ -481,6 +497,12 @@ export default {
       position: {
         top: "69.7%",
         left: "26%",
+      },
+      name: "杭州辽大食品有限公司",
+      shops: {
+        title: "青梅片",
+        banner: "./adImages/2021011927.jpg",
+        intro: "梅之盛宴，好吃到停不下来",
       },
     },
     {
@@ -509,7 +531,7 @@ export default {
       name: "杭州金迈田种养殖有限公司",
       shops: {
         title: "春香柑橘",
-        banner: "",
+        banner: "./adImages/2021011917.jpg",
         intro: "甜入人心品不够，甜言蜜语道不完",
       },
     },
@@ -528,12 +550,6 @@ export default {
         top: "75.5%",
         left: "30.8%",
       },
-      name: "杭州金峰茶叶专业合作社",
-      shops: {
-        title: "草莓",
-        banner: "",
-        intro: "莓的味道，又好吃的，又怀念的",
-      },
     },
     {
       num: 17,
@@ -541,6 +557,12 @@ export default {
       position: {
         top: "69.7%",
         left: "30.8%",
+      },
+      name: "杭州金峰茶叶专业合作社",
+      shops: {
+        title: "草莓",
+        banner: "./adImages/2021011913.jpg",
+        intro: "莓的味道，又好吃的，又怀念的",
       },
     },
     {
@@ -577,8 +599,8 @@ export default {
       name: "杭州巨佳茶业有限公司",
       shops: {
         title: "巨佳龙井茶",
-        banner: "./adImages/2021011914.png",
-        intro: "",
+        banner: "./adImages/2021011914.jpg",
+        intro: "大自然的恩赐，清新的视觉享受，醇厚回甘，香气醉人",
       },
     },
     {
@@ -590,9 +612,9 @@ export default {
       },
       name: "杭州膳礼坊网络科技有限公司",
       shops: {
-        title: "炒货",
-        banner: "",
-        intro: "",
+        title: "吊瓜子",
+        banner: "./adImages/2021011916.jpg",
+        intro: "贴心设计小包装，吃一颗口感柔绵、香脆奇特",
       },
     },
     {
@@ -613,8 +635,8 @@ export default {
       name: "杭州百晨食品有限公司",
       shops: {
         title: "琥珀核桃仁",
-        banner: "./adImages/2021011918.png",
-        intro: "",
+        banner: "./adImages/2021011918.jpg",
+        intro: "每一口都吃的安心，满嘴飘香",
       },
     },
     {
@@ -624,12 +646,6 @@ export default {
         top: "46.5%",
         left: "30.8%",
       },
-      name: "杭州小龙食品有限公司",
-      shops: {
-        title: "松子",
-        banner: "./adImages/2021011902.jpg",
-        intro: "颗粒饱满，原味松香，好原料制作好坚果",
-      },
     },
     {
       num: 26,
@@ -637,6 +653,12 @@ export default {
       position: {
         top: "40.7%",
         left: "30.8%",
+      },
+      name: "杭州小龙食品有限公司",
+      shops: {
+        title: "松子",
+        banner: "./adImages/2021011902.jpg",
+        intro: "颗粒饱满，原味松香，好原料制作好坚果",
       },
     },
     {
@@ -665,7 +687,7 @@ export default {
       name: "杭州舒禾农产品有限公司",
       shops: {
         title: "蔬菜礼盒",
-        banner: "./adImages/2021011901.png",
+        banner: "./adImages/2021011901.jpg",
         intro: "住在蚊帐里的新鲜蔬菜，虫子爬不进去，安全又美味",
       },
     },
@@ -695,8 +717,8 @@ export default {
       name: "杭州翠沁斋食品股份有限公司",
       shops: {
         title: "黑芝麻糕点",
-        banner: "./adImages/2021011915.png",
-        intro: "",
+        banner: "./adImages/2021011915.jpg",
+        intro: "小时候的味道",
       },
     },
     {
@@ -709,8 +731,8 @@ export default {
       name: "杭州睿腾电子商务有限公司",
       shops: {
         title: "烤肠",
-        banner: "./adImages/2021011920.png",
-        intro: "",
+        banner: "./adImages/2021011920.jpg",
+        intro: "Q弹的口感，丰盈的肉汁，一口咬下，肉香四溢，满足你对肉肠的所有幻想。",
       },
     },
     {
@@ -739,8 +761,8 @@ export default {
       name: "杭州百乡缘农业开发有限公司",
       shops: {
         title: "鸭",
-        banner: "./adImages/2021011919.png",
-        intro: "",
+        banner: "./adImages/2021011919.jpg",
+        intro: "今天预定，晚上安排集体屠宰，第二天配送到家，不销售冷冻的家禽。",
       },
     },
     {
@@ -761,8 +783,8 @@ export default {
       name: "杭州森宝食品有限公司",
       shops: {
         title: "腰果",
-        banner: "./adImages/2021011903.png",
-        intro: "",
+        banner: "./adImages/2021011903.jpg",
+        intro: "饱满酥脆，香而不腻，入口似阳光暖晒的酥心",
       },
     },
     {
@@ -807,8 +829,8 @@ export default {
       name: "杭州仲三农业发展有限公司",
       shops: {
         title: "酱鸭",
-        banner: "./adImages/2021011921.png",
-        intro: "",
+        banner: "./adImages/2021011921.jpg",
+        intro: "酱鸭色泽红润，入口甜香微辣，肉质紧实，回味无穷。",
       },
     },
     {
@@ -829,8 +851,8 @@ export default {
       name: "杭州德兴蜂业有限公司",
       shops: {
         title: "柑橘蜂蜜",
-        banner: "./adImages/2021011907.png",
-        intro: "",
+        banner: "./adImages/2021011907.jpg",
+        intro: "燥湿化痰，理气调中，选有柑橘子味的蜂蜜",
       },
     },
     {
@@ -851,8 +873,8 @@ export default {
       name: "杭州党山酱萃食品有限公司",
       shops: {
         title: "萝卜干",
-        banner: "./adImages/2021011923.png",
-        intro: "",
+        banner: "./adImages/2021011923.jpg",
+        intro: "童年的味道",
       },
     },
     {
@@ -881,8 +903,8 @@ export default {
       name: "杭州熠苗贸易有限公司",
       shops: {
         title: "萝卜条",
-        banner: "./adImages/2021011904.png",
-        intro: "",
+        banner: "./adImages/2021011904.jpg",
+        intro: "爽脆，做寿丝的不二选择",
       },
     },
     {
@@ -892,12 +914,6 @@ export default {
         top: "40.7%",
         left: "66.8%",
       },
-      name: "杭州麦爽食品有限公司",
-      shops: {
-        title: "薯片",
-        banner: "./adImages/2021011926.png",
-        intro: "",
-      },
     },
     {
       num: 52,
@@ -905,6 +921,12 @@ export default {
       position: {
         top: "34.9%",
         left: "66.8%",
+      },
+      name: "杭州麦爽食品有限公司",
+      shops: {
+        title: "薯片",
+        banner: "./adImages/2021011926.jpg",
+        intro: "一口一片，超级香脆",
       },
     },
     {
@@ -914,12 +936,6 @@ export default {
         top: "34.9%",
         left: "64.4%",
       },
-      name: "杭州西厨贝可电子商务有限公司",
-      shops: {
-        title: "葡式蛋挞皮",
-        banner: "./adImages/2021011908.png",
-        intro: "",
-      },
     },
     {
       num: 54,
@@ -928,6 +944,12 @@ export default {
         top: "34.9%",
         left: "62%",
       },
+      name: "杭州西厨贝可电子商务有限公司",
+      shops: {
+        title: "葡式蛋挞皮",
+        banner: "./adImages/2021011908.jpg",
+        intro: "酥脆而不掉渣，在家也能吃到KFC蛋挞。",
+      },
     },
     {
       num: 55,
@@ -935,12 +957,6 @@ export default {
       position: {
         top: "29.1%",
         left: "62%",
-      },
-      name: "杭州张瑜食品有限公司",
-      shops: {
-        title: "外婆家醉鱼干",
-        banner: "./adImages/2021011905.png",
-        intro: "",
       },
     },
     {
@@ -966,6 +982,12 @@ export default {
         top: "23.3%",
         left: "66.8%",
       },
+      name: "杭州张瑜食品有限公司",
+      shops: {
+        title: "外婆家醉鱼干",
+        banner: "./adImages/2021011905.jpg",
+        intro: "鲜嫩的肉质，越嚼越香，三种口味，随心选",
+      },
     },
     {
       num: 59,
@@ -990,6 +1012,12 @@ export default {
         top: "23.3%",
         left: "74%",
       },
+      name: "龚老汉控股集团有限公司",
+      shops: {
+        title: "有机甲鱼",
+        banner: "./adImages/2021011906.jpg",
+        intro: "好水养好鳖，买好鳖就来龚老汉",
+      },
     },
     {
       num: 62,
@@ -997,12 +1025,6 @@ export default {
       position: {
         top: "29.1%",
         left: "74%",
-      },
-      name: "龚老汉控股集团有限公司",
-      shops: {
-        title: "有机甲鱼",
-        banner: "./adImages/2021011906.png",
-        intro: "",
       },
     },
     {
@@ -1014,9 +1036,9 @@ export default {
       },
       name: "杭州亿舟农业发展有限公司",
       shops: {
-        title: "农产品",
-        banner: "",
-        intro: "",
+        title: "梅干菜",
+        banner: "./adImages/2021011922.jpg",
+        intro: "干爽清香，扣肉顶呱呱",
       },
     },
     {
@@ -1037,8 +1059,8 @@ export default {
       name: "杭州陈源昌食品有限公司",
       shops: {
         title: "巴西松子",
-        banner: "./adImages/2021011924.png",
-        intro: "",
+        banner: "./adImages/2021011924.jpg",
+        intro: "小包装，壳薄饱满，满足你的味蕾",
       },
     },
     {
@@ -1051,8 +1073,16 @@ export default {
       name: "杭州传农梅干菜专业合作社",
       shops: {
         title: "梅干菜",
-        banner: "./adImages/2021011925.png",
-        intro: "",
+        banner: "./adImages/2021011925.jpg",
+        intro: "萧山人都知道的本地梅干菜",
+      },
+    },
+    {
+      num: 67,
+      type: 0,
+      position: {
+        top: "58.1%",
+        left: "74%",
       },
     },
   ],

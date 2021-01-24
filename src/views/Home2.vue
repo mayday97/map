@@ -45,16 +45,23 @@
         </div>
       </div>
       <!-- 线路上的盒子 -->
-      <div class="box-point" v-for="item in boxList" :key="item.num" :style="{ top: item.position.top, left: item.position.left }"></div>
+      <div class="box-point" v-for="item in boxList" :key="item.num" :style="{ top: item.position.top, left: item.position.left }">
+        <div :style="{ width: '100%', height: '100%', background: item.shops ? '#333' : null }"></div>
+      </div>
     </div>
+
+    <!-- 领奖励弹框 -->
+    <van-popup v-model="showReward">
+      <div style="color:#fff">领奖海报</div>
+    </van-popup>
 
     <!-- 详情弹框 -->
     <van-popup v-model="showDetail" :close-on-click-overlay="false">
       <div class="place-detail-wrap popup-wrap">
         <div class="shop-item " v-if="showPlace.shops">
-          <p class="text">{{ showPlace.intro }}</p>
-          <img :src="showPlace.shops.banner" alt="" class="img" />
+          <h2 class="title">{{ showPlace.shops.intro }}</h2>
           <p class="text">{{ showPlace.name }}出品</p>
+          <img :src="showPlace.shops.banner" alt="" class="img" />
         </div>
       </div>
       <img src="@/assets/icon/close-2.png" class="icon-close" alt="" @click="closeDetail" />
@@ -90,7 +97,6 @@
 </template>
 
 <script>
-import Clipboard from "clipboard";
 import Jquery from "jquery";
 import mydata from "../../public/data.js";
 const Unit_Time = 100; //单位时间
@@ -99,7 +105,7 @@ const Speed_Time = 200; // 走路速度
 
 import { Popup, Swipe, SwipeItem } from "vant";
 export default {
-  name: "Home",
+  name: "Home2",
   components: {
     [Popup.name]: Popup,
     [Swipe.name]: Swipe,
@@ -107,14 +113,18 @@ export default {
   },
   data() {
     return {
+      showReward: false, //领奖弹框
+
       stepCount: 0, //记录当前走到第几步
       diceStyle: {
+        width: "70px",
+        height: "70px",
         backgroundPosition: "0% 0%",
       },
 
-      selectChildpup: false, //选人物弹框
+      selectChildpup: true, //选人物弹框
 
-      mappup: false,
+      mappup: true,
       flag2: false,
 
       showAction: false, //动画
@@ -124,14 +134,14 @@ export default {
       music: true,
       fly: false,
       showPrevent: false, //小人开始移动时的放触摸遮罩
-      showStart: false, //开始弹框
+      showStart: true, //开始弹框
       showDetail: false, //详情弹框
 
       boyStyle: {
         width: "64px",
         height: "64px",
         top: "75.5%",
-        left: "9.6%",
+        left: "10.3%",
         backgroundPosition: "0% 0%",
         transitionDuration: "0ms",
         transitionProperty: "",
@@ -141,6 +151,8 @@ export default {
       showPlace: {}, //要展示的地点信息
 
       boxList: [],
+
+      detailPupCount: 0, //记录弹出多少个产品
     };
   },
   created() {
@@ -154,11 +166,37 @@ export default {
   methods: {
     //摇筛子
     bindDice() {
+      //到终点了
+      if (this.stepCount >= this.boxList.length) {
+        console.log("到终点了");
+        this.showReward = true;
+        return;
+      }
       const diceMusic = this.$refs.dicemusic;
       diceMusic.play();
 
       this.showPrevent = true;
-      const num = parseInt(Math.random() * 6) + 1; //生成骰子随机数
+      // let num = parseInt(Math.random() * 6) + 1; //生成骰子随机数
+      let num = 6;
+
+      let temArr = this.boxList.slice(this.stepCount, this.stepCount + num); //本次走的盒子区间
+      console.log("起始", temArr);
+
+      let hasArr = temArr.filter((item) => {
+        if (typeof item.shops == "object") {
+          return item;
+        }
+      });
+      if (hasArr.length != 0) {
+        const randomNum = parseInt(Math.random() * hasArr.length);
+        let hasitem = hasArr[randomNum];
+        num = hasitem.num - this.stepCount;
+        temArr = temArr.filter((item) => {
+          if (item.num <= hasitem.num) {
+            return item;
+          }
+        });
+      }
 
       //骰子动画切换
       let tag = 1;
@@ -201,9 +239,6 @@ export default {
             this.diceStyle.backgroundPosition = "0% 0%";
         }
 
-        let temArr = this.boxList.slice(this.stepCount, this.stepCount + num);
-        console.log("起始", temArr);
-
         let arr2 = temArr.filter((item) => {
           return item.type === 1;
         });
@@ -242,6 +277,11 @@ export default {
           this.showPlaceDetail(target);
         }
         this.showPrevent = false;
+        if (this.stepCount >= this.boxList.length) {
+          console.log("到终点了");
+          this.showReward = true;
+          return;
+        }
       }
     },
 
@@ -550,6 +590,7 @@ export default {
     showPlaceDetail(e) {
       this.showPlace = e;
       this.showDetail = true;
+      this.detailPupCount = this.detailPupCount + 1;
     },
   },
 };
@@ -559,7 +600,7 @@ export default {
 .map-line-start {
   position: absolute;
   top: 73.7%;
-  left: 10.5%;
+  left: 9.5%;
   width: 50px;
 }
 .map-line-end {
@@ -582,8 +623,6 @@ export default {
   left: 50%;
   bottom: 50px;
   transform: translateX(-50%);
-  width: 70px;
-  height: 70px;
   background-image: url("../assets/image/dice.png");
   z-index: 999;
 }
@@ -691,11 +730,15 @@ export default {
   background-color: rgba(0, 0, 0, 0);
 }
 .popup-wrap {
-  width: 350px;
-  height: 453px;
-  background-image: url("~@/assets/image/bg-popup-2.jpg");
-  background-size: contain;
-  background-repeat: no-repeat;
+  // width: 350px;
+  // height: 453px;
+  // background-image: url("~@/assets/image/bg-popup-2.jpg");
+  // background-size: contain;
+  // background-repeat: no-repeat;
+  width: 80vw;
+  padding: 10px 16px;
+  background-color: #fff;
+  border-radius: 12px;
 }
 .start-wrap {
   width: 100%;
@@ -723,23 +766,49 @@ export default {
   }
 }
 .place-detail-wrap {
-  padding: 50px 24px;
   .shop-item {
     background-color: #fff;
-    text-align: center;
+    position: relative;
     .img {
-      width: 80%;
+      width: 88%;
+      display: block;
+      margin: 0 auto;
     }
     .title {
-      font-size: 16px;
-      text-align: center;
+      font-size: 14px;
+      padding: 0 30px;
+      position: relative;
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: "";
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-image: url("../assets/icon/yh-left.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
     }
     .text {
       margin: 0;
       background-color: #fff;
       font-size: 12px;
-      text-align: center;
-      padding-bottom: 5px;
+      position: relative;
+      padding-left: 30px;
+      &::after {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        content: "";
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-image: url("../assets/icon/yh-right.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
     }
   }
 }
