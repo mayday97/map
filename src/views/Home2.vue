@@ -959,16 +959,32 @@ export default {
   z-index: 100;
   .head-text {
     position: absolute;
-    top: -100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #f88e48;
-    color: #fff;
+    top: -145%;
+    left: 30%;
+    // transform: translateX(-50%);
+    // background-color: #fff;
+    // box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);
     font-size: 12px;
-    width: 170px;
-    min-height: 50px;
-    padding: 5px;
+    width: 180px;
+    min-height: 91px;
+    padding: 8px;
     border-radius: 6px;
+    background-image: url("../assets/image/bg-text.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    // &::after {
+    //   position: absolute;
+    //   top: 99%;
+    //   left: 24%;
+    //   transform: translateX(-50%);
+    //   content: "";
+    //   display: block;
+    //   width: 0;
+    //   height: 0;
+    //   border-left: 5px solid transparent;
+    //   border-right: 5px solid transparent;
+    //   border-top: 8px solid #fff;
+    // }
   }
 }
 
