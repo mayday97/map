@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-22 17:12:22
+ * @LastEditTime: 2021-01-25 12:06:02
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -9,7 +9,12 @@
     <audio preload src="../assets/music/airplane.mp3" style="display:none" ref="airmusic"></audio>
     <audio preload src="../assets/music/run.mp3" loop style="display:none" ref="runmusic"></audio>
     <audio preload src="../assets/music/dice1.mp3" loop style="display:none" ref="dicemusic"></audio>
-    <audio preload src="../assets/music/pup1.mp3" style="display:none" ref="pupmusic"></audio>
+    <audio preload src="../assets/music/close.mp3" style="display:none" ref="closemusic"></audio>
+    <audio preload src="../assets/music/start-btn.mp3" style="display:none" ref="startbtnmusic"></audio>
+    <!-- 普通弹框声音 -->
+    <audio preload src="../assets/music/pup.mp3" style="display:none" ref="pupmusic"></audio>
+    <!-- 最后领取红包声音 -->
+    <audio preload src="../assets/music/puphb.mp3" style="display:none" ref="puphbmusic"></audio>
 
     <!-- 防触摸遮罩 -->
     <div class="prevent-wrap" v-show="showPrevent"></div>
@@ -46,13 +51,13 @@
       </div>
       <!-- 线路上的盒子 -->
       <div class="box-point" v-for="item in boxList" :key="item.num" :style="{ top: item.position.top, left: item.position.left }">
-        <div :style="{ width: '100%', height: '100%', background: item.shops ? '#333' : null }"></div>
+        <!-- <div :style="{ width: '100%', height: '100%', background: item.shops ? '#333' : null }"></div> -->
       </div>
     </div>
 
     <!-- 领奖励弹框 -->
     <van-popup v-model="showReward">
-      <div style="color:#fff">领奖海报</div>
+      <img src="../assets/image/hb-bg.png" class="reward-wrap" />
     </van-popup>
 
     <!-- 详情弹框 -->
@@ -117,8 +122,8 @@ export default {
 
       stepCount: 0, //记录当前走到第几步
       diceStyle: {
-        width: "70px",
-        height: "70px",
+        width: "150px",
+        height: "100px",
         backgroundPosition: "0% 0%",
       },
 
@@ -274,12 +279,23 @@ export default {
         console.log("全程结束", arr[step - 1]);
         let target = arr[step - 1];
         if (target.shops) {
-          this.showPlaceDetail(target);
+          const pupMusic = this.$refs.pupmusic;
+          pupMusic.play();
+          setTimeout(() => {
+            this.showPlaceDetail(target);
+          }, 400);
         }
         this.showPrevent = false;
         if (this.stepCount >= this.boxList.length) {
           console.log("到终点了");
-          this.showReward = true;
+          const bgMusic = this.$refs.bgmusic;
+          bgMusic.pause();
+          const puphbMusic = this.$refs.puphbmusic;
+          puphbMusic.play();
+          setTimeout(() => {
+            this.showReward = true;
+          }, 400);
+
           return;
         }
       }
@@ -305,7 +321,11 @@ export default {
 
     //关闭详情弹框
     closeDetail() {
-      this.showDetail = false;
+      const closeMusic = this.$refs.closemusic;
+      closeMusic.play();
+      setTimeout(() => {
+        this.showDetail = false;
+      }, 500);
     },
 
     //打开关闭音乐
@@ -360,27 +380,36 @@ export default {
 
     //点击开始
     handleStart() {
-      this.showStart = false;
+      const startBtnMusic = this.$refs.startbtnmusic;
       const bgMusic = this.$refs.bgmusic;
       const airMusic = this.$refs.airmusic;
       const runMusic = this.$refs.runmusic;
       const diceMusic = this.$refs.dicemusic;
+      const closeMusic = this.$refs.closemusic;
       const pupMusic = this.$refs.pupmusic;
-      bgMusic.play();
+      const puphbMusic = this.$refs.puphbmusic;
+      startBtnMusic.play();
+      setTimeout(() => {
+        this.showStart = false;
+        this.showAction = true;
+        setTimeout(() => {
+          this.flag = true;
+        }, 500);
+        bgMusic.play();
+      }, 700);
+
       airMusic.play();
       airMusic.pause();
       runMusic.play();
       runMusic.pause();
       diceMusic.play();
       diceMusic.pause();
+      closeMusic.play();
+      closeMusic.pause();
       pupMusic.play();
       pupMusic.pause();
-
-      this.showStart = false;
-      this.showAction = true;
-      setTimeout(() => {
-        this.flag = true;
-      }, 500);
+      puphbMusic.play();
+      puphbMusic.pause();
     },
 
     //地球旋转动画结束
@@ -597,6 +626,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.reward-wrap {
+  width: 320px;
+}
 .map-line-start {
   position: absolute;
   top: 73.7%;
@@ -621,7 +653,7 @@ export default {
 .dice-box {
   position: fixed;
   left: 50%;
-  bottom: 50px;
+  bottom: 30px;
   transform: translateX(-50%);
   background-image: url("../assets/image/dice.png");
   z-index: 999;
