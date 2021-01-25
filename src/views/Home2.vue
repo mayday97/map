@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-25 12:06:02
+ * @LastEditTime: 2021-01-25 18:21:59
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -42,7 +42,9 @@
       <!-- 地图说明 -->
       <div class="map-intro"></div>
       <!-- 小人 -->
-      <div class="icon-boy" ref="boy" :style="boyStyle"></div>
+      <div class="icon-boy" ref="boy" :style="boyStyle">
+        <div class="head-text" v-show="showBoyHead">{{ boyHeadText }}</div>
+      </div>
       <!-- 地点 -->
       <div class="place" v-for="item in placeList" :key="item.name" :style="{ top: item.position.top, left: item.position.left }">
         <div class="place-icon">
@@ -116,8 +118,12 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
   },
+
   data() {
     return {
+      showBoyHead: true,
+      boyHeadText: "一张“萧山年货地图”带你配齐萧山地道年货！和我们一起走完全程，领取百元现金红包！",
+
       showReward: false, //领奖弹框
 
       stepCount: 0, //记录当前走到第几步
@@ -171,6 +177,7 @@ export default {
   methods: {
     //摇筛子
     bindDice() {
+      this.showBoyHead = false;
       //到终点了
       if (this.stepCount >= this.boxList.length) {
         console.log("到终点了");
@@ -620,6 +627,26 @@ export default {
       this.showPlace = e;
       this.showDetail = true;
       this.detailPupCount = this.detailPupCount + 1;
+
+      // 判断走到哪里 显示文字
+
+      if (this.stepCount > 0 && this.stepCount < 27) {
+        this.showBoyHead = false;
+      } else if (this.stepCount >= 27 && this.stepCount < 37) {
+        if (this.boyHeadText == "一张“萧山年货地图”带你配齐萧山地道年货！和我们一起走完全程，领取百元现金红包！") {
+          this.boyHeadText = "真厉害，你已经走过半程，走完全程就可以领取现金红包啦！";
+          this.showBoyHead = true;
+        } else {
+          this.showBoyHead = false;
+        }
+      } else if (this.stepCount > 60) {
+        if (this.boyHeadText == "真厉害，你已经走过半程，走完全程就可以领取现金红包啦！") {
+          this.boyHeadText = "再接再厉，马上就要到达终点啦！优惠券等你来领！";
+          this.showBoyHead = true;
+        } else {
+          this.showBoyHead = false;
+        }
+      }
     },
   },
 };
@@ -930,6 +957,19 @@ export default {
   transform: translate(-50%, -50%);
   transition-timing-function: linear;
   z-index: 100;
+  .head-text {
+    position: absolute;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f88e48;
+    color: #fff;
+    font-size: 12px;
+    width: 170px;
+    min-height: 50px;
+    padding: 5px;
+    border-radius: 6px;
+  }
 }
 
 .place {
