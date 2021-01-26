@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-22 15:17:41
+ * @LastEditTime: 2021-01-26 15:39:23
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -37,7 +37,7 @@
     <!-- 领红包倒计次数弹框 -->
     <van-popup v-model="showCountTime">
       <div class="red-packet" v-if="count == 0">
-        <img class="img" src="../../public/adImages/2021011902.jpg" alt="" />
+        <img class="img" src="../assets/image/hb-bg.png" alt="" />
         <img src="@/assets/icon/close-2.png" class="icon-close" alt="" @click="showCountTime = false" />
       </div>
       <div class="count-wrap" v-if="count < 10 && count > 0">

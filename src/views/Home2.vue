@@ -1,7 +1,7 @@
 <!--
  * @Author: xiaoyu
  * @Date: 2020-12-22 09:54:41
- * @LastEditTime: 2021-01-25 18:21:59
+ * @LastEditTime: 2021-01-26 15:18:30
 -->
 <template>
   <div class="map-page" ref="scroll" id="scroll">
@@ -43,7 +43,7 @@
       <div class="map-intro"></div>
       <!-- 小人 -->
       <div class="icon-boy" ref="boy" :style="boyStyle">
-        <div class="head-text" v-show="showBoyHead">{{ boyHeadText }}</div>
+        <!-- <div class="head-text" v-show="showBoyHead">{{ boyHeadText }}</div> -->
       </div>
       <!-- 地点 -->
       <div class="place" v-for="item in placeList" :key="item.name" :style="{ top: item.position.top, left: item.position.left }">
@@ -56,6 +56,17 @@
         <!-- <div :style="{ width: '100%', height: '100%', background: item.shops ? '#333' : null }"></div> -->
       </div>
     </div>
+
+    <!-- 说明弹框 -->
+    <van-popup v-model="showBoyHead" position="bottom" :close-on-click-overlay="false">
+      <div class="intro-wrap">
+        <div class="boy-box" :style="{ width: '64px', height: '64px', backgroundImage: boyStyle.backgroundImage }"></div>
+        <!-- <transition name="van-slide-left"> -->
+        <img :src="boyHeadText.url" alt="" class="txt-img" />
+        <!-- </transition> -->
+        <img class="ok-btn" src="../assets/icon/ok-btn.png" alt="" @click="showBoyHead = false" />
+      </div>
+    </van-popup>
 
     <!-- 领奖励弹框 -->
     <van-popup v-model="showReward">
@@ -121,8 +132,11 @@ export default {
 
   data() {
     return {
-      showBoyHead: true,
-      boyHeadText: "一张“萧山年货地图”带你配齐萧山地道年货！和我们一起走完全程，领取百元现金红包！",
+      showBoyHead: false,
+      boyHeadText: {
+        flag: 1,
+        url: require("../assets/icon/txt01.png"),
+      },
 
       showReward: false, //领奖弹框
 
@@ -324,6 +338,9 @@ export default {
         this.boyStyle.backgroundImage = `url(${require("../assets/icon/man-7.png")})`;
       }
       this.selectChildpup = false;
+      setTimeout(() => {
+        this.showBoyHead = true;
+      }, 200);
     },
 
     //关闭详情弹框
@@ -332,6 +349,72 @@ export default {
       closeMusic.play();
       setTimeout(() => {
         this.showDetail = false;
+        setTimeout(() => {
+          // 判断走到哪里 显示文字
+          if (this.stepCount > 0 && this.stepCount < 8) {
+            this.showBoyHead = false;
+          } else if (this.stepCount >= 8 && this.stepCount < 18) {
+            if (this.boyHeadText.flag == "1") {
+              this.boyHeadText = {
+                flag: 2,
+                url: require("../assets/icon/txt02.png"),
+              };
+              this.showBoyHead = true;
+            } else {
+              this.showBoyHead = false;
+            }
+          } else if (this.stepCount >= 18 && this.stepCount < 27) {
+            if (this.boyHeadText.flag == "2") {
+              this.boyHeadText = {
+                flag: 3,
+                url: require("../assets/icon/txt03.png"),
+              };
+              this.showBoyHead = true;
+            } else {
+              this.showBoyHead = false;
+            }
+          } else if (this.stepCount >= 27 && this.stepCount < 37) {
+            if (this.boyHeadText.flag == "3") {
+              this.boyHeadText = {
+                flag: 4,
+                url: require("../assets/icon/txt04.png"),
+              };
+              this.showBoyHead = true;
+            } else {
+              this.showBoyHead = false;
+            }
+          } else if (this.stepCount >= 37 && this.stepCount < 47) {
+            if (this.boyHeadText.flag == "4") {
+              this.boyHeadText = {
+                flag: 5,
+                url: require("../assets/icon/txt05.png"),
+              };
+              this.showBoyHead = true;
+            } else {
+              this.showBoyHead = false;
+            }
+          } else if (this.stepCount >= 47 && this.stepCount < 57) {
+            if (this.boyHeadText.flag == "5") {
+              this.boyHeadText = {
+                flag: 6,
+                url: require("../assets/icon/txt06.png"),
+              };
+              this.showBoyHead = true;
+            } else {
+              this.showBoyHead = false;
+            }
+          } else if (this.stepCount > 60) {
+            if (this.boyHeadText.flag == "6") {
+              this.boyHeadText = {
+                flag: 7,
+                url: require("../assets/icon/txt07.png"),
+              };
+              this.showBoyHead = true;
+            } else {
+              this.showBoyHead = false;
+            }
+          }
+        }, 300);
       }, 500);
     },
 
@@ -627,32 +710,64 @@ export default {
       this.showPlace = e;
       this.showDetail = true;
       this.detailPupCount = this.detailPupCount + 1;
-
-      // 判断走到哪里 显示文字
-
-      if (this.stepCount > 0 && this.stepCount < 27) {
-        this.showBoyHead = false;
-      } else if (this.stepCount >= 27 && this.stepCount < 37) {
-        if (this.boyHeadText == "一张“萧山年货地图”带你配齐萧山地道年货！和我们一起走完全程，领取百元现金红包！") {
-          this.boyHeadText = "真厉害，你已经走过半程，走完全程就可以领取现金红包啦！";
-          this.showBoyHead = true;
-        } else {
-          this.showBoyHead = false;
-        }
-      } else if (this.stepCount > 60) {
-        if (this.boyHeadText == "真厉害，你已经走过半程，走完全程就可以领取现金红包啦！") {
-          this.boyHeadText = "再接再厉，马上就要到达终点啦！优惠券等你来领！";
-          this.showBoyHead = true;
-        } else {
-          this.showBoyHead = false;
-        }
-      }
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.intro-wrap {
+  width: 100%;
+  height: 260px;
+  background: linear-gradient(to bottom, transparent 0%, transparent 50%, #fff 51%, #fff 100%);
+  background-image: url("../assets/image/bg-3.png");
+  background-size: cover;
+  background-position: top left;
+  background-repeat: no-repeat;
+  position: relative;
+  .boy-box {
+    position: absolute;
+    top: 40px;
+    background-position: 0% 0%;
+  }
+  .txt-img {
+    position: absolute;
+    width: 70%;
+    left: 15%;
+    top: 45%;
+    animation: dropdown 0.3s 0.2s linear forwards;
+    opacity: 0;
+  }
+  @keyframes dropdown {
+    0% {
+      transform: translateY(-150%);
+    }
+    100% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+  }
+
+  .ok-btn {
+    position: absolute;
+    right: 10%;
+    width: 80px;
+    bottom: 50px;
+    animation: rightin 0.3s 0.5s linear forwards;
+    opacity: 0;
+  }
+  @keyframes rightin {
+    0% {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0%);
+    }
+  }
+}
+
 .reward-wrap {
   width: 320px;
 }
